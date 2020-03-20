@@ -24,4 +24,9 @@ class Operations
     @customers_array.clear()
   end
 
+  def customer_credit_check?(customer, item)
+    item_price = item.price
+    customer.wallet >= item_price
+  end
+
 end

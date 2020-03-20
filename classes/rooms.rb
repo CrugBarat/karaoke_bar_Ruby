@@ -2,15 +2,15 @@ require_relative('operations.rb')
 
 class Rooms < Operations
 
-  attr_reader :name, :till, :capacity, :fee, :playlist
-  attr_writer :till, :capacity, :fee
+  attr_reader :name, :till, :capacity, :price, :playlist
+  attr_writer :till, :capacity, :price
 
-  def initialize(name, till, stock, capacity, fee, playlist)
+  def initialize(name, till, stock, capacity, price, playlist)
     @name = name
     @till = till
     @stock = stock
     @capacity = capacity
-    @fee = fee
+    @price = price
     @customers_array = []
     @playlist = playlist
   end

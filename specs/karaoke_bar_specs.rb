@@ -4,6 +4,8 @@ require_relative('../classes/karaoke_bar.rb')
 require_relative('../classes/operations.rb')
 require_relative('../classes/customers.rb')
 require_relative('../classes/rooms.rb')
+require_relative('../classes/drinks.rb')
+require_relative('../classes/food.rb')
 
 
 Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
@@ -11,11 +13,13 @@ Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
 class TestKaraokeBar < MiniTest::Test
 
   def setup()
-    @room_1 = Rooms.new("Madonna Room", 25.00, @stock, 6, 10.00, @playlist)
+    @room1 = Rooms.new("Madonna Room", 25.00, @stock, 6, 10.00, @playlist)
     @rooms = [@room_2, @room_3]
     @customer1 = Customers.new("Audrey", 25, 38.00, 20, "Pillow Talk")
-    @customer2 = Customers.new("Bea", 21, 20.00, 35, "Come on Eileen")
+    @customer2 = Customers.new("Bea", 21, 5.00, 35, "Come on Eileen")
     @karaoke_bar = KaraokeBar.new("The Sing Inn", 50.00, @stock, @rooms)
+    @drink1 = Drinks.new("Tennents", :Lager, 8.00, 5)
+    @food1 = Food.new("Burger", 6.00, 15)
   end
 
   def test_get_name()
@@ -70,27 +74,27 @@ class TestKaraokeBar < MiniTest::Test
   end
 
   def test_customer_room_count__empty()
-    assert_equal(0, @room_1.customer_count())
+    assert_equal(0, @room1.customer_count())
   end
 
   def test_can_add_customer_to_room()
-    @room_1.add_customer(@customer1)
-    assert_equal(1, @room_1.customer_count())
+    @room1.add_customer(@customer1)
+    assert_equal(1, @room1.customer_count())
   end
 
   def test_can_remove_customer_from_room()
-    @room_1.add_customer(@customer1)
-    @room_1.add_customer(@customer2)
-    @room_1.remove_customer(@customer1)
-    assert_equal(1, @room_1.customer_count())
+    @room1.add_customer(@customer1)
+    @room1.add_customer(@customer2)
+    @room1.remove_customer(@customer1)
+    assert_equal(1, @room1.customer_count())
   end
 
   def test_can_empty_room()
-    @room_1.add_customer(@customer1)
-    @room_1.add_customer(@customer1)
-    @room_1.add_customer(@customer1)
-    @room_1.clear_room()
-    assert_equal(0, @room_1.customer_count())
+    @room1.add_customer(@customer1)
+    @room1.add_customer(@customer1)
+    @room1.add_customer(@customer1)
+    @room1.clear_room()
+    assert_equal(0, @room1.customer_count())
   end
 
   def test_room_count()
@@ -98,8 +102,32 @@ class TestKaraokeBar < MiniTest::Test
   end
 
   def test_add_new_room()
-    @karaoke_bar.add_new_room(@room_1)
+    @karaoke_bar.add_new_room(@room1)
     assert_equal(3, @karaoke_bar.room_count())
+  end
+
+  def test_check_if_customer_can_afford_drink__true()
+    assert_equal(true, @karaoke_bar.customer_credit_check?(@customer1, @drink1))
+  end
+
+  def test_heck_if_customer_can_afford_drink__false()
+    assert_equal(false, @karaoke_bar.customer_credit_check?(@customer2, @drink1))
+  end
+
+  def test_check_if_customer_can_afford_food__true()
+    assert_equal(true, @karaoke_bar.customer_credit_check?(@customer1, @food1))
+  end
+
+  def test_check_if_customer_can_afford_food__false()
+    assert_equal(false, @karaoke_bar.customer_credit_check?(@customer2, @food1))
+  end
+
+  def test_check_if_customer_can_afford_room_fee__true()
+    assert_equal(true, @karaoke_bar.customer_credit_check?(@customer1, @room1))
+  end
+
+  def test_check_if_customer_can_afford_room_fee__true()
+    assert_equal(false, @karaoke_bar.customer_credit_check?(@customer2, @room1))
   end
 
 end

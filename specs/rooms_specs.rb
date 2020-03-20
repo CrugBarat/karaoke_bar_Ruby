@@ -32,8 +32,8 @@ class TestRooms < MiniTest::Test
     assert_equal(8, @room1.capacity())
   end
 
-  def test_get_fee()
-    assert_equal(10.00, @room1.fee())
+  def test_get_price()
+    assert_equal(10.00, @room1.price())
   end
 
   def test_get_playlist()
@@ -50,9 +50,9 @@ class TestRooms < MiniTest::Test
     assert_equal(12, @room1.capacity())
   end
 
-  def test_set_fee()
-    @room1.fee = 8.00
-    assert_equal(8.00, @room1.fee())
+  def test_set_price()
+    @room1.price = 8.00
+    assert_equal(8.00, @room1.price())
   end
 
   def test_can_add_money_to_till
