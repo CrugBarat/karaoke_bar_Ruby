@@ -1,9 +1,9 @@
 require("minitest/autorun")
 require('minitest/reporters')
-require_relative('../rooms.rb')
-require_relative('../customers.rb')
-require_relative('../operations.rb')
-require_relative('../songs.rb')
+require_relative('../classes/rooms.rb')
+require_relative('../classes/customers.rb')
+require_relative('../classes/operations.rb')
+require_relative('../classes/songs.rb')
 
 
 Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
