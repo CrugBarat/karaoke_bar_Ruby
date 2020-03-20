@@ -14,6 +14,7 @@ class TestKaraokeBar < MiniTest::Test
 
   def setup()
     @room1 = Rooms.new("Madonna Room", 25.00, @stock, 6, 10.00, @playlist)
+    @room2 = Rooms.new("Nirvana Room", 25.00, @stock, 1, 10.00, @playlist)
     @rooms = [@room_2, @room_3]
     @customer1 = Customers.new("Audrey", 25, 38.00, 20, "Pillow Talk")
     @customer2 = Customers.new("Bea", 21, 5.00, 35, "Come on Eileen")
@@ -106,28 +107,40 @@ class TestKaraokeBar < MiniTest::Test
     assert_equal(3, @karaoke_bar.room_count())
   end
 
-  def test_check_if_customer_can_afford_drink__true()
+  def test_customer_can_afford_drink__true()
     assert_equal(true, @karaoke_bar.customer_credit_check?(@customer1, @drink1))
   end
 
-  def test_heck_if_customer_can_afford_drink__false()
+  def test_customer_can_afford_drink__false()
     assert_equal(false, @karaoke_bar.customer_credit_check?(@customer2, @drink1))
   end
 
-  def test_check_if_customer_can_afford_food__true()
+  def test_customer_can_afford_food__true()
     assert_equal(true, @karaoke_bar.customer_credit_check?(@customer1, @food1))
   end
 
-  def test_check_if_customer_can_afford_food__false()
+  def test_customer_can_afford_food__false()
     assert_equal(false, @karaoke_bar.customer_credit_check?(@customer2, @food1))
   end
 
-  def test_check_if_customer_can_afford_room_fee__true()
+  def test_customer_can_afford_room_fee__true()
     assert_equal(true, @karaoke_bar.customer_credit_check?(@customer1, @room1))
   end
 
-  def test_check_if_customer_can_afford_room_fee__true()
+  def test_customer_can_afford_room_fee__true()
     assert_equal(false, @karaoke_bar.customer_credit_check?(@customer2, @room1))
+  end
+
+  def test_room_capacity_reached__true()
+    @room2.add_customer(@customer1)
+    @room2.add_customer(@customer2)
+    assert_equal(true, @karaoke_bar.room_capacity_reached?(@room2))
+  end
+
+  def test_room_capacity_reached__false()
+    @room2.add_customer(@customer1)
+    @room2.add_customer(@customer2)
+    assert_equal(false, @karaoke_bar.room_capacity_reached?(@room1))
   end
 
 end

@@ -21,4 +21,12 @@ class KaraokeBar < Operations
     @rooms.push(room)
   end
 
+  def room_capacity_reached?(room)
+    if room.customer_count >= room.capacity
+      return true
+    else
+      return false
+    end
+  end
+
 end

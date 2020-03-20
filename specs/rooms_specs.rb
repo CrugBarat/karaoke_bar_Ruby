@@ -4,6 +4,8 @@ require_relative('../classes/rooms.rb')
 require_relative('../classes/customers.rb')
 require_relative('../classes/operations.rb')
 require_relative('../classes/songs.rb')
+require_relative('../classes/food.rb')
+require_relative('../classes/drinks.rb')
 
 
 Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
@@ -17,7 +19,9 @@ class TestRooms < MiniTest::Test
     @playlist = [@song1, @song2]
     @room1 = Rooms.new("Elvis Room", 30.00, @stock, 8, 10.00, @playlist)
     @customer1 = Customers.new("Frank", 35, 45.00, 5, "A Little Respect")
-    @customer2 = Customers.new("Bea", 21, 20.00, 35, "Come on Eileen")
+    @customer2 = Customers.new("Bea", 21, 5.00, 35, "Come on Eileen")
+    @drink1 = Drinks.new("Tennents", :Lager, 8.00, 5)
+    @food1 = Food.new("Burger", 6.00, 15)
   end
 
   def test_get_name()
@@ -77,6 +81,22 @@ class TestRooms < MiniTest::Test
   def test_add_song_to_playlist()
     @room1.add_song_to_playlist(@song3)
     assert_equal(3, @room1.playlist_count())
+  end
+
+  def test_customer_can_afford_drink__true()
+    assert_equal(true, @room1.customer_credit_check?(@customer1, @drink1))
+  end
+
+  def test_customer_can_afford_drink__false()
+    assert_equal(false, @room1.customer_credit_check?(@customer2, @drink1))
+  end
+
+  def test_customer_can_afford_food__true()
+    assert_equal(true, @room1.customer_credit_check?(@customer1, @food1))
+  end
+
+  def test_customer_can_afford_food__false()
+    assert_equal(false, @room1.customer_credit_check?(@customer2, @food1))
   end
 
 end
