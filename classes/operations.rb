@@ -24,9 +24,17 @@ class Operations
     @customers_array.clear()
   end
 
-  def customer_credit_check?(customer, item)
+  def customer_has_cash?(customer, item)
     item_price = item.price
     customer.wallet >= item_price
+  end
+
+  def customer_is_above_age?(customer)
+    customer.age >= @age_limit
+  end
+
+  def customer_too_drunk?(customer)
+    customer.drunkness > @drunkness_level
   end
 
 end

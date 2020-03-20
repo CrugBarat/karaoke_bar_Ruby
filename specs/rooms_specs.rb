@@ -20,6 +20,8 @@ class TestRooms < MiniTest::Test
     @room1 = Rooms.new("Elvis Room", 30.00, @stock, 8, 10.00, @playlist)
     @customer1 = Customers.new("Frank", 35, 45.00, 5, "A Little Respect")
     @customer2 = Customers.new("Bea", 21, 5.00, 35, "Come on Eileen")
+    @customer3 = Customers.new("Ally", 17, 15.00, 0, "Dancing Queen")
+    @customer4 = Customers.new("Colin", 36, 115.00, 55, "Wonderwall")
     @drink1 = Drinks.new("Tennents", :Lager, 8.00, 5)
     @food1 = Food.new("Burger", 6.00, 15)
   end
@@ -84,19 +86,35 @@ class TestRooms < MiniTest::Test
   end
 
   def test_customer_can_afford_drink__true()
-    assert_equal(true, @room1.customer_credit_check?(@customer1, @drink1))
+    assert_equal(true, @room1.customer_has_cash?(@customer1, @drink1))
   end
 
   def test_customer_can_afford_drink__false()
-    assert_equal(false, @room1.customer_credit_check?(@customer2, @drink1))
+    assert_equal(false, @room1.customer_has_cash?(@customer2, @drink1))
   end
 
   def test_customer_can_afford_food__true()
-    assert_equal(true, @room1.customer_credit_check?(@customer1, @food1))
+    assert_equal(true, @room1.customer_has_cash?(@customer1, @food1))
   end
 
   def test_customer_can_afford_food__false()
-    assert_equal(false, @room1.customer_credit_check?(@customer2, @food1))
+    assert_equal(false, @room1.customer_has_cash?(@customer2, @food1))
+  end
+
+  def test_customer_is_above_age__can_enter()
+    assert_equal(true, @room1.customer_is_above_age?(@customer2))
+  end
+
+  def test_customer_is_above_age__too_young()
+    assert_equal(false, @room1.customer_is_above_age?(@customer3))
+  end
+
+  def test_customer_too_drunk__true()
+    assert_equal(true, @room1.customer_too_drunk?(@customer4))
+  end
+
+  def test_customer_too_drunk_false()
+    assert_equal(false, @room1.customer_too_drunk?(@customer1))
   end
 
 end

@@ -13,6 +13,8 @@ class Rooms < Operations
     @price = price
     @customers_array = []
     @playlist = playlist
+    @drunkness_level = 40
+    @age_limit = 18
   end
 
   def playlist_count()

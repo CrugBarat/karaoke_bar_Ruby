@@ -18,6 +18,8 @@ class TestKaraokeBar < MiniTest::Test
     @rooms = [@room_2, @room_3]
     @customer1 = Customers.new("Audrey", 25, 38.00, 20, "Pillow Talk")
     @customer2 = Customers.new("Bea", 21, 5.00, 35, "Come on Eileen")
+    @customer3 = Customers.new("Ally", 17, 15.00, 0, "Dancing Queen")
+    @customer4 = Customers.new("Colin", 36, 115.00, 55, "Wonderwall")
     @karaoke_bar = KaraokeBar.new("The Sing Inn", 50.00, @stock, @rooms)
     @drink1 = Drinks.new("Tennents", :Lager, 8.00, 5)
     @food1 = Food.new("Burger", 6.00, 15)
@@ -108,39 +110,83 @@ class TestKaraokeBar < MiniTest::Test
   end
 
   def test_customer_can_afford_drink__true()
-    assert_equal(true, @karaoke_bar.customer_credit_check?(@customer1, @drink1))
+    assert_equal(true, @karaoke_bar.customer_has_cash?(@customer1, @drink1))
   end
 
   def test_customer_can_afford_drink__false()
-    assert_equal(false, @karaoke_bar.customer_credit_check?(@customer2, @drink1))
+    assert_equal(false, @karaoke_bar.customer_has_cash?(@customer2, @drink1))
   end
 
   def test_customer_can_afford_food__true()
-    assert_equal(true, @karaoke_bar.customer_credit_check?(@customer1, @food1))
+    assert_equal(true, @karaoke_bar.customer_has_cash?(@customer1, @food1))
   end
 
   def test_customer_can_afford_food__false()
-    assert_equal(false, @karaoke_bar.customer_credit_check?(@customer2, @food1))
+    assert_equal(false, @karaoke_bar.customer_has_cash?(@customer2, @food1))
   end
 
   def test_customer_can_afford_room_fee__true()
-    assert_equal(true, @karaoke_bar.customer_credit_check?(@customer1, @room1))
+    assert_equal(true, @karaoke_bar.customer_has_cash?(@customer1, @room1))
   end
 
   def test_customer_can_afford_room_fee__true()
-    assert_equal(false, @karaoke_bar.customer_credit_check?(@customer2, @room1))
+    assert_equal(false, @karaoke_bar.customer_has_cash?(@customer2, @room1))
   end
 
-  def test_room_capacity_reached__true()
+  def test_room_capacity_full__false()
     @room2.add_customer(@customer1)
     @room2.add_customer(@customer2)
-    assert_equal(true, @karaoke_bar.room_capacity_reached?(@room2))
+    assert_equal(false, @karaoke_bar.room_capacity_full?(@room1))
   end
 
-  def test_room_capacity_reached__false()
+  def test_room_capacity_full__true()
     @room2.add_customer(@customer1)
     @room2.add_customer(@customer2)
-    assert_equal(false, @karaoke_bar.room_capacity_reached?(@room1))
+    assert_equal(true, @karaoke_bar.room_capacity_full?(@room2))
+  end
+
+  def test_customer_is_above_age__can_enter()
+    assert_equal(true, @karaoke_bar.customer_is_above_age?(@customer2))
+  end
+
+  def test_customer_is_above_age__too_young()
+    assert_equal(false, @karaoke_bar.customer_is_above_age?(@customer3))
+  end
+
+  def test_customer_too_drunk__true()
+    assert_equal(true, @karaoke_bar.customer_too_drunk?(@customer4))
+  end
+
+  def test_customer_too_drunk_false()
+    assert_equal(false, @karaoke_bar.customer_too_drunk?(@customer1))
+  end
+
+  def test_add_customer_to_room_with_conditions__success()
+    @room1.add_customer(@customer1)
+    @room1.add_customer(@customer1)
+    @karaoke_bar.add_customer_to_room(@room1, @customer1)
+    assert_equal(3, @room1.customer_count())
+  end
+
+  def test_add_customer_to_room_with_conditions__funds_fail()
+    @room1.add_customer(@customer1)
+    @room1.add_customer(@customer1)
+    @karaoke_bar.add_customer_to_room(@room1, @customer2)
+    assert_equal(2, @room1.customer_count())
+  end
+
+  def test_add_customer_to_room_with_conditions__age_fail()
+    @room1.add_customer(@customer1)
+    @room1.add_customer(@customer1)
+    @room1.add_customer(@customer1)
+    @karaoke_bar.add_customer_to_room(@room1, @customer3)
+    assert_equal(3, @room1.customer_count())
+  end
+
+  def test_add_customer_to_room_with_conditions__capacity_fail()
+    @room2.add_customer(@customer1)
+    @karaoke_bar.add_customer_to_room(@room2, @customer1)
+    assert_equal(1, @room2.customer_count())
   end
 
 end

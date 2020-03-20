@@ -11,6 +11,8 @@ class KaraokeBar < Operations
     @stock = stock
     @rooms = rooms
     @customers_array = []
+    @age_limit = 18
+    @drunkness_level = 50
   end
 
   def room_count()
@@ -21,12 +23,19 @@ class KaraokeBar < Operations
     @rooms.push(room)
   end
 
-  def room_capacity_reached?(room)
-    if room.customer_count >= room.capacity
+  def room_capacity_full?(room)
+    if room.capacity <= room.customer_count
       return true
     else
       return false
     end
+  end
+
+  def add_customer_to_room(room, customer)
+    return if !room.customer_has_cash?(customer, room)
+    return if !room.customer_is_above_age?(customer)
+    return if room_capacity_full?(room)
+    room.add_customer(customer)
   end
 
 end
