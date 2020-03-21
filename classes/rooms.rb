@@ -50,15 +50,7 @@ class Rooms < Operations
 
   def display_lyrics(title)
     lyrics = get_lyrics(title)
-    for lyric in lyrics
-      puts lyric
-    end
-  end
-
-  def customer_cheers_at_fav_song(song, customer)
-    if customer.fav_song == song.title
-      customer.cheers()
-    end
+    lyrics.each {|lyric| puts lyric}
   end
 
 end

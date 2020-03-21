@@ -20,39 +20,33 @@ class TestSongs < MiniTest::Test
         "To treat me like you do?",
         'When you\'ve laid your hands upon me',
         "And told me who you are?"]
+      end
+
+      def test_get_title()
+        assert_equal("Oh L'Amour", @song1.title())
+      end
+
+      def test_get_artist()
+        assert_equal("Erasure", @song1.artist())
+      end
+
+      def test_get_lyrics()
+        assert_equal(@lyrics1, @song1.lyrics())
+      end
+
+      def test_set_title()
+        @song1.title = "Blue Monday"
+        assert_equal("Blue Monday", @song1.title())
+      end
+
+      def test_set_artist()
+        @song1.artist = "New Order"
+        assert_equal("New Order", @song1.artist())
+      end
+
+      def test_set_lyrics()
+        @song1.lyrics = @lyrics2
+        assert_equal(@lyrics2, @song1.lyrics())
+      end
+
     end
-
-    def test_get_title()
-      assert_equal("Oh L'Amour", @song1.title())
-    end
-
-    def test_get_artist()
-      assert_equal("Erasure", @song1.artist())
-    end
-
-    def test_get_lyrics()
-      assert_equal(@lyrics1, @song1.lyrics())
-    end
-
-    def test_set_title()
-      @song1.title = "Blue Monday"
-      assert_equal("Blue Monday", @song1.title())
-    end
-
-    def test_set_artist()
-      @song1.artist = "New Order"
-      assert_equal("New Order", @song1.artist())
-    end
-
-    def test_set_lyrics()
-      @song1.lyrics = @lyrics2
-      assert_equal(@lyrics2, @song1.lyrics())
-    end
-
-    def test_return_lyrics()
-      result = @song1.return_lyrics(@song1, "Oh L'Amour")
-      assert_equal(@lyrics1, result)
-    end
-
-
-  end

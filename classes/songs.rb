@@ -8,10 +8,4 @@ class Songs
     @lyrics = lyrics
   end
 
-  # def return_lyrics(song, title)
-  #   if title == song.title
-  #     return song.lyrics
-  #   end
-  # end
-
 end

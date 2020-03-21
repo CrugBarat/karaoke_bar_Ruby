@@ -17,21 +17,21 @@ class TestRooms < MiniTest::Test
       "To treat me like you do?",
       'When you\'ve laid your hands upon me',
       "And told me who you are?"]
-    @song1 = Songs.new("Oh L'Amour", "Erasure", @lyrics1)
-    @song2 = Songs.new("Blue Monday", "New Order", @lyrics2)
-    @song3 = Songs.new("A Little Respect", "Erasure", @lyrics3)
-    @song4 = Songs.new("Restless", "New Order", @lyrics3)
-    @playlist = [@song1, @song2, @song3, @song4]
-    @new_order = [@song2, @song4]
-    @room1 = Rooms.new("Elvis Room", 30.00, 8, 10.00, @playlist)
-    @customer1 = Customers.new("Frank", 35, 45.00, 5, "A Little Respect")
-    @customer2 = Customers.new("Bea", 21, 5.00, 35, "Come on Eileen")
-    @customer3 = Customers.new("Ally", 17, 15.00, 0, "Dancing Queen")
-    @customer4 = Customers.new("Colin", 36, 115.00, 55, "Wonderwall")
-    @customer5 = Customers.new("Ricky", 37, 50.00, 15, "Supersonic")
-    @customer6 = Customers.new("Aldo", 40, 65.00, 40, "Oh L'Amour")
-    @drink1 = Drinks.new("Tennents", :Lager, 8.00, 5)
-    @food1 = Food.new("Burger", 6.00, 15)
+      @song1 = Songs.new("Oh L'Amour", "Erasure", @lyrics1)
+      @song2 = Songs.new("Blue Monday", "New Order", @lyrics2)
+      @song3 = Songs.new("A Little Respect", "Erasure", @lyrics3)
+      @song4 = Songs.new("Restless", "New Order", @lyrics3)
+      @playlist = [@song1, @song2, @song3, @song4]
+      @new_order = [@song2, @song4]
+      @room1 = Rooms.new("Elvis Room", 30.00, 8, 10.00, @playlist)
+      @customer1 = Customers.new("Frank", 35, 45.00, 5, "A Little Respect")
+      @customer2 = Customers.new("Bea", 21, 5.00, 35, "Come on Eileen")
+      @customer3 = Customers.new("Ally", 17, 15.00, 0, "Dancing Queen")
+      @customer4 = Customers.new("Colin", 36, 115.00, 55, "Wonderwall")
+      @customer5 = Customers.new("Ricky", 37, 50.00, 15, "Supersonic")
+      @customer6 = Customers.new("Aldo", 40, 65.00, 40, "Oh L'Amour")
+      @drink1 = Drinks.new("Tennents", :Lager, 8.00, 5)
+      @food1 = Food.new("Burger", 6.00, 15)
     end
 
     def test_get_name()
@@ -208,7 +208,6 @@ class TestRooms < MiniTest::Test
       assert_equal(18.00, @room1.stock_value_by_item(@food1))
     end
 
-
     def test_serve_food_to_customer__success()
       @room1.add_item(@food1)
       @room1.add_item(@food1)
@@ -286,11 +285,6 @@ class TestRooms < MiniTest::Test
       assert_equal(55, @customer4.drunkness())
       assert_equal(30.00, @room1.till())
       assert_equal(1, @room1.stock_level(@drink1))
-    end
-
-    def test_customer_cheers_when_fav_song_is_played()
-      result = @room1.customer_cheers_at_fav_song(@song1, @customer6)
-      assert_equal("Woohoo!", result)
     end
 
     def test_customer_spending_starts_zero()

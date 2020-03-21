@@ -26,4 +26,17 @@ class Customers
     "Woohoo!"
   end
 
+  def customer_cheers_at_fav_song(song, customer)
+    if customer.fav_song == song.title
+      customer.cheers()
+    end
+  end
+
+  def customer_sings_lyrics(song, customer)
+    lyrics = song.lyrics
+    if customer.fav_song == song.title
+      lyrics.each {|lyric| p lyric.upcase}
+    end
+  end
+
 end
