@@ -37,6 +37,8 @@ class KaraokeBar < Operations
     return if room_capacity_full?(room)
     return if room.customer_too_drunk?(customer)
     room.add_customer(customer)
+    customer.pay(room.price)
+    add_money_to_till(room.price)
   end
 
 

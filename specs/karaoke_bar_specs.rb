@@ -166,6 +166,8 @@ class TestKaraokeBar < MiniTest::Test
     @room1.add_customer(@customer1)
     @karaoke_bar.add_customer_to_room(@room1, @customer1)
     assert_equal(3, @room1.customer_count())
+    assert_equal(28.00, @customer1.wallet())
+    assert_equal(60.00, @karaoke_bar.till())
   end
 
   def test_add_customer_to_room_with_conditions__funds_fail()
@@ -173,6 +175,8 @@ class TestKaraokeBar < MiniTest::Test
     @room1.add_customer(@customer1)
     @karaoke_bar.add_customer_to_room(@room1, @customer2)
     assert_equal(2, @room1.customer_count())
+    assert_equal(5.00, @customer2.wallet())
+    assert_equal(50.00, @karaoke_bar.till())
   end
 
   def test_add_customer_to_room_with_conditions__age_fail()
@@ -181,18 +185,24 @@ class TestKaraokeBar < MiniTest::Test
     @room1.add_customer(@customer1)
     @karaoke_bar.add_customer_to_room(@room1, @customer3)
     assert_equal(3, @room1.customer_count())
+    assert_equal(15.00, @customer3.wallet())
+    assert_equal(50.00, @karaoke_bar.till())
   end
 
   def test_add_customer_to_room_with_conditions__capacity_fail()
     @room2.add_customer(@customer1)
     @karaoke_bar.add_customer_to_room(@room2, @customer1)
     assert_equal(1, @room2.customer_count())
+    assert_equal(38.00, @customer1.wallet())
+    assert_equal(50.00, @karaoke_bar.till())
   end
 
   def test_add_customer_to_room_with_conditions__drunkness_fail()
     @room1.add_customer(@customer1)
     @karaoke_bar.add_customer_to_room(@room1, @customer4)
     assert_equal(1, @room1.customer_count())
+    assert_equal(115.00, @customer4.wallet())
+    assert_equal(50.00, @karaoke_bar.till())
   end
 
   def test_serve_food_to_customer__success()
