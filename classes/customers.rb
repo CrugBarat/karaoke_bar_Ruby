@@ -15,13 +15,11 @@ class Customers
   end
 
   def consume_drink(drink)
-    alcohol_content = drink.alcohol_content
-    @drunkness += alcohol_content
+    @drunkness += drink.alcohol_content
   end
 
   def consume_food(food)
-    rejuv_level = food.rejuv_level
-    @drunkness -= rejuv_level
+    @drunkness -= food.rejuv_level
   end
 
   def cheers()

@@ -35,7 +35,9 @@ class KaraokeBar < Operations
     return if !room.customer_has_cash?(customer, room)
     return if !room.customer_is_above_age?(customer)
     return if room_capacity_full?(room)
+    return if room.customer_too_drunk?(customer)
     room.add_customer(customer)
   end
+
 
 end

@@ -25,8 +25,7 @@ class Operations
   end
 
   def customer_has_cash?(customer, item)
-    item_price = item.price
-    customer.wallet >= item_price
+    customer.wallet >= item.price
   end
 
   def customer_is_above_age?(customer)
@@ -35,6 +34,22 @@ class Operations
 
   def customer_too_drunk?(customer)
     customer.drunkness > @drunkness_level
+  end
+
+  def serve_food_to_customer(customer, food)
+    return if !customer_has_cash?(customer, food)
+    customer.pay(food.price)
+    add_money_to_till(food.price)
+    customer.consume_food(food)
+  end
+
+  def serve_drink_to_customer(customer, drink)
+    return if !customer_has_cash?(customer, drink)
+    return if !customer_is_above_age?(customer)
+    return if customer_too_drunk?(customer)
+    customer.pay(drink.price)
+    add_money_to_till(drink.price)
+    customer.consume_drink(drink)
   end
 
 end
