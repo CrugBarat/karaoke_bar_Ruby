@@ -41,9 +41,15 @@ class Rooms < Operations
     return @playlist.find_all { |song| song.artist == artist }
   end
 
-  def get_lyrics(title)
-    song = get_song_by_title(title)
-    return song.lyrics
+  # def get_lyrics(title)
+  #   song = get_song_by_title(title)
+  #   return song.lyrics
+  # end
+
+  def customer_cheers_at_fav_song(song, customer)
+    if customer.fav_song == song.title
+      customer.cheers()
+    end
   end
 
 end

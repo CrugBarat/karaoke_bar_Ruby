@@ -25,6 +25,7 @@ class TestRooms < MiniTest::Test
     @customer3 = Customers.new("Ally", 17, 15.00, 0, "Dancing Queen")
     @customer4 = Customers.new("Colin", 36, 115.00, 55, "Wonderwall")
     @customer5 = Customers.new("Ricky", 37, 50.00, 15, "Supersonic")
+    @customer6 = Customers.new("Aldo", 40, 65.00, 40, "Oh L'Amour")
     @drink1 = Drinks.new("Tennents", :Lager, 8.00, 5)
     @food1 = Food.new("Burger", 6.00, 15)
     @lyrics2 = ["How does it feel",
@@ -262,6 +263,11 @@ class TestRooms < MiniTest::Test
       assert_equal(55, @customer4.drunkness())
       assert_equal(30.00, @room1.till())
       assert_equal(1, @room1.stock_level(@drink1))
+    end
+
+    def test_customer_cheers_when_fav_song_is_played()
+      result = @room1.customer_cheers_at_fav_song(@song1, @customer6)
+      assert_equal("Woohoo!", result)
     end
 
   end
