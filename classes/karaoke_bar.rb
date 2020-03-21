@@ -2,8 +2,8 @@ require_relative('operations.rb')
 
 class KaraokeBar < Operations
 
-  attr_reader :name, :till, :stock, :rooms, :price
-  attr_writer :till, :price
+  attr_reader :name, :till, :stock, :rooms, :price, :customer_spending, :capacity
+  attr_writer :till, :price, :customer_spending
 
   def initialize(name, till, rooms, price)
     @name = name
@@ -14,6 +14,8 @@ class KaraokeBar < Operations
     @customers_array = []
     @age_limit = 18
     @drunkness_level = 50
+    @customer_spending = 0.00
+    @capacity = 75
   end
 
   def room_count()
@@ -22,24 +24,6 @@ class KaraokeBar < Operations
 
   def add_new_room(room)
     @rooms.push(room)
-  end
-
-  def room_capacity_full?(room)
-    if room.capacity <= room.customer_count
-      return true
-    else
-      return false
-    end
-  end
-
-  def add_customer_to_room(room, customer)
-    return if !room.customer_has_cash?(customer, room)
-    return if !room.customer_is_above_age?(customer)
-    return if room_capacity_full?(room)
-    return if room.customer_too_drunk?(customer)
-    room.add_customer(customer)
-    customer.pay(room.price)
-    add_money_to_till(room.price)
   end
 
 end

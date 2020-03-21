@@ -63,6 +63,7 @@ class Operations
       customer.consume_food(food)
       @stock[food] -= 1
       add_money_to_till(food.price)
+      increase_customer_spending(food.price)
     end
   end
 
@@ -75,7 +76,31 @@ class Operations
       customer.consume_drink(drink)
       @stock[drink] -= 1
       add_money_to_till(drink.price)
+      increase_customer_spending(drink.price)
     end
+  end
+
+  def room_capacity_full?(room)
+    if room.capacity <= room.customer_count
+      return true
+    else
+      return false
+    end
+  end
+
+  def increase_customer_spending(amount)
+    @customer_spending += amount
+  end
+
+  def add_customer_to_room(room, customer)
+    return if !customer_has_cash?(customer, room)
+    return if !customer_is_above_age?(customer)
+    return if room_capacity_full?(room)
+    return if customer_too_drunk?(customer)
+    room.add_customer(customer)
+    customer.pay(room.price)
+    room.add_money_to_till(room.price)
+    room.increase_customer_spending(room.price)
   end
 
 end

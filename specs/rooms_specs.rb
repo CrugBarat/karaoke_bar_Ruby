@@ -270,4 +270,28 @@ class TestRooms < MiniTest::Test
       assert_equal("Woohoo!", result)
     end
 
+    def test_customer_spending_starts_zero()
+      assert_equal(0.00, @room1.customer_spending())
+    end
+
+    def test_customer_spending_increases_with_food_purchase()
+      @room1.add_item(@food1)
+      @room1.serve_food_to_customer(@customer1, @food1)
+      assert_equal(6.00, @room1.customer_spending())
+    end
+
+    def test_customer_spending_increases_with_drink_purchase()
+      @room1.add_item(@drink1)
+      @room1.serve_drink_to_customer(@customer1, @drink1)
+      assert_equal(8.00, @room1.customer_spending())
+    end
+
+    def test_customer_spending_increases_with_multiple_purchase()
+      @room1.add_item(@drink1)
+      @room1.add_item(@food1)
+      @room1.serve_drink_to_customer(@customer1, @drink1)
+      @room1.serve_food_to_customer(@customer1, @food1)
+      assert_equal(14.00, @room1.customer_spending())
+    end
+
   end

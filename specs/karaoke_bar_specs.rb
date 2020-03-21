@@ -178,10 +178,21 @@ class TestKaraokeBar < MiniTest::Test
   def test_add_customer_to_room_with_conditions__success()
     @room1.add_customer(@customer1)
     @room1.add_customer(@customer1)
-    @karaoke_bar.add_customer_to_room(@room1, @customer1)
+    @room1.add_customer_to_room(@room1, @customer1)
     assert_equal(3, @room1.customer_count())
     assert_equal(28.00, @customer1.wallet())
-    assert_equal(60.00, @karaoke_bar.till())
+    assert_equal(35.00, @room1.till())
+    assert_equal(10.00, @room1.customer_spending())
+  end
+
+  def test_add_customer_to_bar_with_conditions__success()
+    @karaoke_bar.add_customer(@customer1)
+    @karaoke_bar.add_customer(@customer1)
+    @karaoke_bar.add_customer_to_room(@karaoke_bar, @customer1)
+    assert_equal(3, @karaoke_bar.customer_count())
+    assert_equal(33.00, @customer1.wallet())
+    assert_equal(55.00, @karaoke_bar.till())
+    assert_equal(5.00, @karaoke_bar.customer_spending())
   end
 
   def test_add_customer_to_room_with_conditions__funds_fail()
@@ -341,4 +352,34 @@ class TestKaraokeBar < MiniTest::Test
     assert_equal(50.00, @karaoke_bar.till())
     assert_equal(1, @karaoke_bar.stock_level(@drink1))
   end
+
+  def test_customer_spending_starts_zero()
+    assert_equal(0.00, @karaoke_bar.customer_spending())
+  end
+
+  def test_customer_spending_increases_with_food_purchase()
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.serve_food_to_customer(@customer1, @food1)
+    assert_equal(6.00, @karaoke_bar.customer_spending())
+  end
+
+  def test_customer_spending_increases_with_drink_purchase()
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.serve_drink_to_customer(@customer1, @drink1)
+    assert_equal(8.00, @karaoke_bar.customer_spending())
+  end
+
+  def test_customer_spending_increases_with_multiple_purchase()
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.serve_drink_to_customer(@customer1, @drink1)
+    @karaoke_bar.serve_food_to_customer(@customer1, @food1)
+    assert_equal(14.00, @karaoke_bar.customer_spending())
+  end
+
+  # def test_customer_spending_increases_with_room_entrance_price()
+  #   @karaoke_bar.add_customer_to_room(@customer1, @room1)
+  #   assert_equal(10.00, @room1.customer_spending())
+  # end
+
 end

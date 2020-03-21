@@ -2,8 +2,8 @@ require_relative('operations.rb')
 
 class Rooms < Operations
 
-  attr_reader :name, :till, :stock, :capacity, :price, :playlist
-  attr_writer :till, :capacity, :price
+  attr_reader :name, :till, :stock, :capacity, :price, :playlist, :customer_spending
+  attr_writer :till, :capacity, :price, :customer_spending
 
   def initialize(name, till, capacity, price, playlist)
     @name = name
@@ -15,6 +15,7 @@ class Rooms < Operations
     @playlist = playlist
     @drunkness_level = 40
     @age_limit = 18
+    @customer_spending = 0.00
   end
 
   def playlist_count()
