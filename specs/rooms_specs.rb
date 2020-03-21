@@ -294,4 +294,51 @@ class TestRooms < MiniTest::Test
       assert_equal(14.00, @room1.customer_spending())
     end
 
+    def test_get_tab()
+      assert_equal(0, @room1.tab())
+    end
+
+    def test_set_tab()
+      @room1.tab = 100.00
+      assert_equal(100.00, @room1.tab())
+    end
+
+    def test_room_tab_has_credit__true()
+      @room1.tab = 10.00
+      assert_equal(true, @room1.bar_tab_has_credit?(@room1, @drink1))
+    end
+
+    def test_room_tab_has_credit__false()
+      @room1.tab = 5.00
+      assert_equal(false, @room1.bar_tab_has_credit?(@room1, @drink1))
+    end
+
+    def test_if_using_room_tab_food__success()
+      @room1.add_item(@food1)
+      @room1.tab = 10.00
+      @room1.if_using_bar_tab_food(@room1, @customer1, @food1)
+      assert_equal(4.00, @room1.tab())
+    end
+
+    def test_if_using_room_tab_drink__success()
+      @room1.add_item(@drink1)
+      @room1.tab = 10.00
+      @room1.if_using_bar_tab_drink(@room1, @customer1, @drink1)
+      assert_equal(2.00, @room1.tab())
+    end
+
+    def test_if_using_room_tab_food__fail()
+      @room1.add_item(@food1)
+      @room1.tab = 5.00
+      @room1.if_using_bar_tab_food(@room1, @customer1, @food1)
+      assert_equal(5.00, @room1.tab())
+    end
+
+    def test_if_using_room_tab_drink__fail()
+      @room1.add_item(@drink1)
+      @room1.tab = 5.00
+      @room1.if_using_bar_tab_drink(@room1, @customer1, @drink1)
+      assert_equal(5.00, @room1.tab())
+    end
+
   end

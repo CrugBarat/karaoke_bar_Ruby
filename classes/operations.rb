@@ -103,4 +103,26 @@ class Operations
     room.increase_customer_spending(room.price)
   end
 
+  def bar_tab_has_credit?(room, item)
+    room.tab >= item.price
+  end
+
+  def if_using_bar_tab_food(room, customer, food)
+    return if !bar_tab_has_credit?(room, food)
+    if @stock[food] > 0
+      customer.consume_food(food)
+      @stock[food] -= 1
+      room.tab -= food.price
+    end
+  end
+
+  def if_using_bar_tab_drink(room, customer, drink)
+    return if !bar_tab_has_credit?(room, drink)
+    if @stock[drink] > 0
+      customer.consume_drink(drink)
+      @stock[drink] -= 1
+      room.tab -= drink.price
+    end
+  end
+
 end

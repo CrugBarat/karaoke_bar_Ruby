@@ -178,7 +178,7 @@ class TestKaraokeBar < MiniTest::Test
   def test_add_customer_to_room_with_conditions__success()
     @room1.add_customer(@customer1)
     @room1.add_customer(@customer1)
-    @room1.add_customer_to_room(@room1, @customer1)
+    @karaoke_bar.add_customer_to_room(@room1, @customer1)
     assert_equal(3, @room1.customer_count())
     assert_equal(28.00, @customer1.wallet())
     assert_equal(35.00, @room1.till())
@@ -377,9 +377,56 @@ class TestKaraokeBar < MiniTest::Test
     assert_equal(14.00, @karaoke_bar.customer_spending())
   end
 
-  # def test_customer_spending_increases_with_room_entrance_price()
-  #   @karaoke_bar.add_customer_to_room(@customer1, @room1)
-  #   assert_equal(10.00, @room1.customer_spending())
-  # end
+  def test_customer_spending_increases_with_room_entrance_price()
+    @karaoke_bar.add_customer_to_room(@room1, @customer1)
+    assert_equal(10.00, @room1.customer_spending())
+  end
+
+  def test_get_tab()
+    assert_equal(0, @karaoke_bar.tab())
+  end
+
+  def test_set_tab()
+    @karaoke_bar.tab = 100.00
+    assert_equal(100.00, @karaoke_bar.tab())
+  end
+
+  def test_bar_tab_has_credit__true()
+    @karaoke_bar.tab = 10.00
+    assert_equal(true, @karaoke_bar.bar_tab_has_credit?(@karaoke_bar, @drink1))
+  end
+
+  def test_bar_tab_has_credit__false()
+    @karaoke_bar.tab = 5.00
+    assert_equal(false, @karaoke_bar.bar_tab_has_credit?(@karaoke_bar, @drink1))
+  end
+
+  def test_if_using_bar_tab_food__success()
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.tab = 10.00
+    @karaoke_bar.if_using_bar_tab_food(@karaoke_bar, @customer1, @food1)
+    assert_equal(4.00, @karaoke_bar.tab())
+  end
+
+  def test_if_using_bar_tab_drink__success()
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.tab = 10.00
+    @karaoke_bar.if_using_bar_tab_drink(@karaoke_bar, @customer1, @drink1)
+    assert_equal(2.00, @karaoke_bar.tab())
+  end
+
+  def test_if_using_bar_tab_food__fail()
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.tab = 5.00
+    @karaoke_bar.if_using_bar_tab_food(@karaoke_bar, @customer1, @food1)
+    assert_equal(5.00, @karaoke_bar.tab())
+  end
+
+  def test_if_using_bar_tab_drink__fail()
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.tab = 5.00
+    @karaoke_bar.if_using_bar_tab_drink(@karaoke_bar, @customer1, @drink1)
+    assert_equal(5.00, @karaoke_bar.tab())
+  end
 
 end
