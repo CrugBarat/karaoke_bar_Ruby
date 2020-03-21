@@ -58,18 +58,24 @@ class Operations
 
   def serve_food_to_customer(customer, food)
     return if !customer_has_cash?(customer, food)
-    customer.pay(food.price)
-    add_money_to_till(food.price)
-    customer.consume_food(food)
+    if @stock[food] > 0
+      customer.pay(food.price)
+      customer.consume_food(food)
+      @stock[food] -= 1
+      add_money_to_till(food.price)
+    end
   end
 
   def serve_drink_to_customer(customer, drink)
     return if !customer_has_cash?(customer, drink)
     return if !customer_is_above_age?(customer)
     return if customer_too_drunk?(customer)
-    customer.pay(drink.price)
-    add_money_to_till(drink.price)
-    customer.consume_drink(drink)
+    if @stock[drink] > 0
+      customer.pay(drink.price)
+      customer.consume_drink(drink)
+      @stock[drink] -= 1
+      add_money_to_till(drink.price)
+    end
   end
 
 end

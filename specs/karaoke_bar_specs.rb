@@ -20,6 +20,7 @@ class TestKaraokeBar < MiniTest::Test
     @customer2 = Customers.new("Bea", 21, 5.00, 35, "Come on Eileen")
     @customer3 = Customers.new("Ally", 17, 15.00, 0, "Dancing Queen")
     @customer4 = Customers.new("Colin", 36, 115.00, 55, "Wonderwall")
+    @customer5 = Customers.new("Ricky", 37, 50.00, 15, "Supersonic")
     @karaoke_bar = KaraokeBar.new("The Sing Inn", 50.00, @rooms, 5.00)
     @drink1 = Drinks.new("Tennents", :Lager, 8.00, 5)
     @food1 = Food.new("Burger", 6.00, 15)
@@ -174,50 +175,6 @@ class TestKaraokeBar < MiniTest::Test
     assert_equal(false, @karaoke_bar.customer_too_drunk?(@customer1))
   end
 
-  def test_get_stock_level_drink__nil()
-    result = @karaoke_bar.stock[@drink1]
-    assert_nil(nil, result)
-  end
-
-  def test_get_stock_level_food__nil()
-    result = @karaoke_bar.stock[@food1]
-    assert_nil(nil, result)
-  end
-
-  def test_can_add_drink_to_stock()
-    assert_equal(1, @karaoke_bar.add_item(@drink1))
-  end
-
-  def test_can_add_multiple_drinks_to_stock()
-    @karaoke_bar.add_item(@drink1)
-    @karaoke_bar.add_item(@drink1)
-    @karaoke_bar.add_item(@drink1)
-    result = @karaoke_bar.stock[@drink1]
-    assert_equal(3, result)
-  end
-
-  def test_can_add_food_to_stock()
-    assert_equal(1, @karaoke_bar.add_item(@food1))
-  end
-
-  def test_can_add_multiple_food_to_stock()
-    @karaoke_bar.add_item(@food1)
-    @karaoke_bar.add_item(@food1)
-    @karaoke_bar.add_item(@food1)
-    result = @karaoke_bar.stock[@food1]
-    assert_equal(3, result)
-  end
-
-  def test_get_stock_value__nil()
-    assert_nil(nil, @karaoke_bar.stock_value())
-  end
-
-  def test_get_stock_value()
-    @karaoke_bar.add_item(@drink1)
-    @karaoke_bar.add_item(@food1)
-    assert_equal(14.00, @karaoke_bar.stock_value())
-  end
-
   def test_add_customer_to_room_with_conditions__success()
     @room1.add_customer(@customer1)
     @room1.add_customer(@customer1)
@@ -262,46 +219,126 @@ class TestKaraokeBar < MiniTest::Test
     assert_equal(50.00, @karaoke_bar.till())
   end
 
+  def test_get_stock_level_drink__nil()
+    result = @karaoke_bar.stock_level(@drink1)
+    assert_nil(nil, result)
+  end
+
+  def test_get_stock_level_food__nil()
+    result = @karaoke_bar.stock_level(@food1)
+    assert_nil(nil, result)
+  end
+
+  def test_can_add_drink_to_stock()
+    assert_equal(1, @karaoke_bar.add_item(@drink1))
+  end
+
+  def test_can_add_multiple_drinks_to_stock()
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@drink1)
+    result = @karaoke_bar.stock_level(@drink1)
+    assert_equal(3, result)
+  end
+
+  def test_can_add_food_to_stock()
+    assert_equal(1, @karaoke_bar.add_item(@food1))
+  end
+
+  def test_can_add_multiple_food_to_stock()
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.add_item(@food1)
+    result = @karaoke_bar.stock_level(@food1)
+    assert_equal(3, result)
+  end
+
+  def test_get_stock_value__nil()
+    assert_nil(nil, @karaoke_bar.stock_value())
+  end
+
+  def test_get_stock_value()
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@food1)
+    assert_equal(14.00, @karaoke_bar.stock_value())
+  end
+
   def test_serve_food_to_customer__success()
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.add_item(@food1)
     @karaoke_bar.serve_food_to_customer(@customer1, @food1)
     assert_equal(32.00, @customer1.wallet())
     assert_equal(5, @customer1.drunkness())
     assert_equal(56.00, @karaoke_bar.till())
+    assert_equal(1, @karaoke_bar.stock_level(@food1))
   end
 
   def test_serve_food_to_customer__funds_fail()
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.add_item(@food1)
     @karaoke_bar.serve_food_to_customer(@customer2, @food1)
     assert_equal(5.00, @customer2.wallet())
     assert_equal(35, @customer2.drunkness())
     assert_equal(50.00, @karaoke_bar.till())
+    assert_equal(2, @karaoke_bar.stock_level(@food1))
+  end
+
+  def test_serve_food_to_customer__stock_fail()
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.serve_food_to_customer(@customer5, @food1)
+    @karaoke_bar.serve_food_to_customer(@customer1, @food1)
+    assert_equal(38.00, @customer1.wallet())
+    assert_equal(20, @customer1.drunkness())
+    assert_equal(56.00, @karaoke_bar.till())
+    assert_equal(0, @karaoke_bar.stock_level(@food1))
   end
 
   def test_serve_drink_to_customer__success()
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@drink1)
     @karaoke_bar.serve_drink_to_customer(@customer1, @drink1)
     assert_equal(30.00, @customer1.wallet())
     assert_equal(25, @customer1.drunkness())
     assert_equal(58.00, @karaoke_bar.till())
+    assert_equal(1, @karaoke_bar.stock_level(@drink1))
   end
 
   def test_serve_drink_to_customer__age_fail()
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@drink1)
     @karaoke_bar.serve_drink_to_customer(@customer3, @drink1)
     assert_equal(15.00, @customer3.wallet())
     assert_equal(0, @customer3.drunkness())
     assert_equal(50.00, @karaoke_bar.till())
+    assert_equal(2, @karaoke_bar.stock_level(@drink1))
   end
 
   def test_serve_drink_to_customer__funds_fail()
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@drink1)
     @karaoke_bar.serve_drink_to_customer(@customer2, @drink1)
     assert_equal(5.00, @customer2.wallet())
     assert_equal(35, @customer2.drunkness())
     assert_equal(50.00, @karaoke_bar.till())
+    assert_equal(2, @karaoke_bar.stock_level(@drink1))
+  end
+
+  def test_serve_drink_to_customer__stock_fail()
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.serve_drink_to_customer(@customer5, @drink1)
+    @karaoke_bar.serve_drink_to_customer(@customer1, @drink1)
+    assert_equal(38.00, @customer1.wallet())
+    assert_equal(20, @customer1.drunkness())
+    assert_equal(58.00, @karaoke_bar.till())
+    assert_equal(0, @karaoke_bar.stock_level(@drink1))
   end
 
   def test_serve_drink_to_customer__drunkness_fail()
+    @karaoke_bar.add_item(@drink1)
     @karaoke_bar.serve_drink_to_customer(@customer4, @drink1)
     assert_equal(115.00, @customer4.wallet())
     assert_equal(55, @customer4.drunkness())
     assert_equal(50.00, @karaoke_bar.till())
+    assert_equal(1, @karaoke_bar.stock_level(@drink1))
   end
-
 end

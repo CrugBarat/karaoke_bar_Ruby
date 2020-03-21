@@ -24,6 +24,7 @@ class TestRooms < MiniTest::Test
     @customer2 = Customers.new("Bea", 21, 5.00, 35, "Come on Eileen")
     @customer3 = Customers.new("Ally", 17, 15.00, 0, "Dancing Queen")
     @customer4 = Customers.new("Colin", 36, 115.00, 55, "Wonderwall")
+    @customer5 = Customers.new("Ricky", 37, 50.00, 15, "Supersonic")
     @drink1 = Drinks.new("Tennents", :Lager, 8.00, 5)
     @food1 = Food.new("Burger", 6.00, 15)
     @lyrics2 = ["How does it feel",
@@ -95,6 +96,19 @@ class TestRooms < MiniTest::Test
       assert_equal(5, @room1.playlist_count())
     end
 
+    def test_get_song_by_title()
+      assert_equal(@song1, @room1.get_song_by_title("Oh L'Amour"))
+    end
+
+    def test_get_songs_by_artist()
+      assert_equal(@new_order, @room1.get_songs_by_artist("New Order"))
+    end
+
+    # def test_get_lyrics()
+    #   result = @room1.get_lyrics("Blue Monday")
+    #   assert_equal(@lyrics2, result)
+    # end
+
     def test_customer_can_afford_drink__true()
       assert_equal(true, @room1.customer_has_cash?(@customer1, @drink1))
     end
@@ -127,68 +141,13 @@ class TestRooms < MiniTest::Test
       assert_equal(false, @room1.customer_too_drunk?(@customer1))
     end
 
-    def test_serve_food_to_customer__success()
-      @room1.serve_food_to_customer(@customer1, @food1)
-      assert_equal(39.00, @customer1.wallet())
-      assert_equal(-10, @customer1.drunkness())
-      assert_equal(36.00, @room1.till())
-    end
-
-    def test_serve_food_to_customer__funds_fail()
-      @room1.serve_food_to_customer(@customer2, @food1)
-      assert_equal(5.00, @customer2.wallet())
-      assert_equal(35, @customer2.drunkness())
-      assert_equal(30.00, @room1.till())
-    end
-
-    def test_serve_drink_to_customer__success()
-      @room1.serve_drink_to_customer(@customer1, @drink1)
-      assert_equal(37.00, @customer1.wallet())
-      assert_equal(10, @customer1.drunkness())
-      assert_equal(38.00, @room1.till())
-    end
-
-    def test_serve_drink_to_customer__age_fail()
-      @room1.serve_drink_to_customer(@customer3, @drink1)
-      assert_equal(15.00, @customer3.wallet())
-      assert_equal(0, @customer3.drunkness())
-      assert_equal(30.00, @room1.till())
-    end
-
-    def test_serve_drink_to_customer__funds_fail()
-      @room1.serve_drink_to_customer(@customer2, @drink1)
-      assert_equal(5.00, @customer2.wallet())
-      assert_equal(35, @customer2.drunkness())
-      assert_equal(30.00, @room1.till())
-    end
-
-    def test_serve_drink_to_customer__drunkness_fail()
-      @room1.serve_drink_to_customer(@customer4, @drink1)
-      assert_equal(115.00, @customer4.wallet())
-      assert_equal(55, @customer4.drunkness())
-      assert_equal(30.00, @room1.till())
-    end
-
-    def test_get_song_by_title()
-      assert_equal(@song1, @room1.get_song_by_title("Oh L'Amour"))
-    end
-
-    def test_get_songs_by_artist()
-      assert_equal(@new_order, @room1.get_songs_by_artist("New Order"))
-    end
-
-    def test_get_lyrics()
-      result = @room1.get_lyrics("Blue Monday")
-      assert_equal(@lyrics2, result)
-    end
-
     def test_get_stock_level_drink__nil()
-      result = @room1.stock[@drink1]
+      result = @room1.stock_level(@drink1)
       assert_nil(nil, result)
     end
 
     def test_get_stock_level_food__nil()
-      result = @room1.stock[@food1]
+      result = @room1.stock_level(@food1)
       assert_nil(nil, result)
     end
 
@@ -200,7 +159,7 @@ class TestRooms < MiniTest::Test
       @room1.add_item(@drink1)
       @room1.add_item(@drink1)
       @room1.add_item(@drink1)
-      result = @room1.stock[@drink1]
+      result = @room1.stock_level(@drink1)
       assert_equal(3, result)
     end
 
@@ -212,7 +171,7 @@ class TestRooms < MiniTest::Test
       @room1.add_item(@food1)
       @room1.add_item(@food1)
       @room1.add_item(@food1)
-      result = @room1.stock[@food1]
+      result = @room1.stock_level(@food1)
       assert_equal(3, result)
     end
 
@@ -224,6 +183,85 @@ class TestRooms < MiniTest::Test
       @room1.add_item(@drink1)
       @room1.add_item(@food1)
       assert_equal(14.00, @room1.stock_value())
+    end
+
+    def test_serve_food_to_customer__success()
+      @room1.add_item(@food1)
+      @room1.add_item(@food1)
+      @room1.serve_food_to_customer(@customer1, @food1)
+      assert_equal(39.00, @customer1.wallet())
+      assert_equal(-10, @customer1.drunkness())
+      assert_equal(36.00, @room1.till())
+      assert_equal(1, @room1.stock_level(@food1))
+    end
+
+    def test_serve_food_to_customer__funds_fail()
+      @room1.add_item(@food1)
+      @room1.add_item(@food1)
+      @room1.serve_food_to_customer(@customer2, @food1)
+      assert_equal(5.00, @customer2.wallet())
+      assert_equal(35, @customer2.drunkness())
+      assert_equal(30.00, @room1.till())
+      assert_equal(2, @room1.stock_level(@food1))
+    end
+
+    def test_serve_food_to_customer__stock_fail()
+      @room1.add_item(@food1)
+      @room1.serve_food_to_customer(@customer5, @food1)
+      @room1.serve_food_to_customer(@customer1, @food1)
+      assert_equal(45.00, @customer1.wallet())
+      assert_equal(5, @customer1.drunkness())
+      assert_equal(36.00, @room1.till())
+      assert_equal(0, @room1.stock_level(@food1))
+    end
+
+    def test_serve_drink_to_customer__success()
+      @room1.add_item(@drink1)
+      @room1.add_item(@drink1)
+      @room1.serve_drink_to_customer(@customer1, @drink1)
+      assert_equal(37.00, @customer1.wallet())
+      assert_equal(10, @customer1.drunkness())
+      assert_equal(38.00, @room1.till())
+      assert_equal(1, @room1.stock_level(@drink1))
+    end
+
+    def test_serve_drink_to_customer__age_fail()
+      @room1.add_item(@drink1)
+      @room1.add_item(@drink1)
+      @room1.serve_drink_to_customer(@customer3, @drink1)
+      assert_equal(15.00, @customer3.wallet())
+      assert_equal(0, @customer3.drunkness())
+      assert_equal(30.00, @room1.till())
+      assert_equal(2, @room1.stock_level(@drink1))
+    end
+
+    def test_serve_drink_to_customer__funds_fail()
+      @room1.add_item(@drink1)
+      @room1.add_item(@drink1)
+      @room1.serve_drink_to_customer(@customer2, @drink1)
+      assert_equal(5.00, @customer2.wallet())
+      assert_equal(35, @customer2.drunkness())
+      assert_equal(30.00, @room1.till())
+      assert_equal(2, @room1.stock_level(@drink1))
+    end
+
+    def test_serve_drink_to_customer__stock_fail()
+      @room1.add_item(@drink1)
+      @room1.serve_drink_to_customer(@customer5, @drink1)
+      @room1.serve_drink_to_customer(@customer1, @drink1)
+      assert_equal(45.00, @customer1.wallet())
+      assert_equal(5, @customer1.drunkness())
+      assert_equal(38.00, @room1.till())
+      assert_equal(0, @room1.stock_level(@drink1))
+    end
+
+    def test_serve_drink_to_customer__drunkness_fail()
+      @room1.add_item(@drink1)
+      @room1.serve_drink_to_customer(@customer4, @drink1)
+      assert_equal(115.00, @customer4.wallet())
+      assert_equal(55, @customer4.drunkness())
+      assert_equal(30.00, @room1.till())
+      assert_equal(1, @room1.stock_level(@drink1))
     end
 
   end
