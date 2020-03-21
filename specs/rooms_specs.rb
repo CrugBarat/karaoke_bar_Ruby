@@ -13,6 +13,10 @@ Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
 class TestRooms < MiniTest::Test
 
   def setup()
+    @lyrics2 = ["How does it feel",
+      "To treat me like you do?",
+      'When you\'ve laid your hands upon me',
+      "And told me who you are?"]
     @song1 = Songs.new("Oh L'Amour", "Erasure", @lyrics1)
     @song2 = Songs.new("Blue Monday", "New Order", @lyrics2)
     @song3 = Songs.new("A Little Respect", "Erasure", @lyrics3)
@@ -28,10 +32,6 @@ class TestRooms < MiniTest::Test
     @customer6 = Customers.new("Aldo", 40, 65.00, 40, "Oh L'Amour")
     @drink1 = Drinks.new("Tennents", :Lager, 8.00, 5)
     @food1 = Food.new("Burger", 6.00, 15)
-    @lyrics2 = ["How does it feel",
-      "To treat me like you do?",
-      'When you\'ve laid your hands upon me',
-      "And told me who you are?"]
     end
 
     def test_get_name()
@@ -105,10 +105,10 @@ class TestRooms < MiniTest::Test
       assert_equal(@new_order, @room1.get_songs_by_artist("New Order"))
     end
 
-    # def test_get_lyrics()
-    #   result = @room1.get_lyrics("Blue Monday")
-    #   assert_equal(@lyrics2, result)
-    # end
+    def test_get_lyrics()
+      result = @room1.get_lyrics("Blue Monday")
+      assert_equal(@lyrics2, result)
+    end
 
     def test_customer_can_afford_drink__true()
       assert_equal(true, @room1.customer_has_cash?(@customer1, @drink1))
