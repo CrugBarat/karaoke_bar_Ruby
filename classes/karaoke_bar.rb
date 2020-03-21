@@ -2,14 +2,15 @@ require_relative('operations.rb')
 
 class KaraokeBar < Operations
 
-  attr_reader :name, :till, :rooms
-  attr_writer :till
+  attr_reader :name, :till, :stock, :rooms, :price
+  attr_writer :till, :price
 
-  def initialize(name, till, stock, rooms)
+  def initialize(name, till, rooms, price)
     @name = name
     @till = till
-    @stock = stock
+    @stock = Hash.new()
     @rooms = rooms
+    @price = price
     @customers_array = []
     @age_limit = 18
     @drunkness_level = 50
@@ -40,6 +41,5 @@ class KaraokeBar < Operations
     customer.pay(room.price)
     add_money_to_till(room.price)
   end
-
 
 end

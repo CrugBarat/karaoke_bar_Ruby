@@ -36,6 +36,26 @@ class Operations
     customer.drunkness > @drunkness_level
   end
 
+  def add_item(item)
+    if @stock.include?(item)
+      @stock[item] += 1
+    else
+      @stock[item] = 1
+    end
+  end
+
+  def stock_level(item)
+    return @stock[item]
+  end
+
+  def stock_value()
+    total = 0
+    for item in @stock.keys
+      total += (item.price * @stock[item])
+    end
+    return total
+  end
+
   def serve_food_to_customer(customer, food)
     return if !customer_has_cash?(customer, food)
     customer.pay(food.price)

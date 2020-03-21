@@ -13,14 +13,14 @@ Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
 class TestKaraokeBar < MiniTest::Test
 
   def setup()
-    @room1 = Rooms.new("Madonna Room", 25.00, @stock, 6, 10.00, @playlist)
-    @room2 = Rooms.new("Nirvana Room", 25.00, @stock, 1, 10.00, @playlist)
+    @room1 = Rooms.new("Madonna Room", 25.00, 6, 10.00, @playlist)
+    @room2 = Rooms.new("Nirvana Room", 25.00, 1, 10.00, @playlist)
     @rooms = [@room_2, @room_3]
     @customer1 = Customers.new("Audrey", 25, 38.00, 20, "Pillow Talk")
     @customer2 = Customers.new("Bea", 21, 5.00, 35, "Come on Eileen")
     @customer3 = Customers.new("Ally", 17, 15.00, 0, "Dancing Queen")
     @customer4 = Customers.new("Colin", 36, 115.00, 55, "Wonderwall")
-    @karaoke_bar = KaraokeBar.new("The Sing Inn", 50.00, @stock, @rooms)
+    @karaoke_bar = KaraokeBar.new("The Sing Inn", 50.00, @rooms, 5.00)
     @drink1 = Drinks.new("Tennents", :Lager, 8.00, 5)
     @food1 = Food.new("Burger", 6.00, 15)
   end
@@ -33,13 +33,26 @@ class TestKaraokeBar < MiniTest::Test
     assert_equal(50.00, @karaoke_bar.till())
   end
 
+  def test_get_stock()
+    assert_equal({}, @karaoke_bar.stock())
+  end
+
   def test_get_rooms()
     assert_equal(@rooms, @karaoke_bar.rooms())
+  end
+
+  def test_get_price()
+    assert_equal(5.00, @karaoke_bar.price())
   end
 
   def test_set_till()
     @karaoke_bar.till = 100.00
     assert_equal(100.00, @karaoke_bar.till())
+  end
+
+  def test_set_price()
+    @karaoke_bar.price = 10.00
+    assert_equal(10.00, @karaoke_bar.price())
   end
 
   def test_can_add_money_to_till
@@ -159,6 +172,50 @@ class TestKaraokeBar < MiniTest::Test
 
   def test_customer_too_drunk_false()
     assert_equal(false, @karaoke_bar.customer_too_drunk?(@customer1))
+  end
+
+  def test_get_stock_level_drink__nil()
+    result = @karaoke_bar.stock[@drink1]
+    assert_nil(nil, result)
+  end
+
+  def test_get_stock_level_food__nil()
+    result = @karaoke_bar.stock[@food1]
+    assert_nil(nil, result)
+  end
+
+  def test_can_add_drink_to_stock()
+    assert_equal(1, @karaoke_bar.add_item(@drink1))
+  end
+
+  def test_can_add_multiple_drinks_to_stock()
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@drink1)
+    result = @karaoke_bar.stock[@drink1]
+    assert_equal(3, result)
+  end
+
+  def test_can_add_food_to_stock()
+    assert_equal(1, @karaoke_bar.add_item(@food1))
+  end
+
+  def test_can_add_multiple_food_to_stock()
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.add_item(@food1)
+    result = @karaoke_bar.stock[@food1]
+    assert_equal(3, result)
+  end
+
+  def test_get_stock_value__nil()
+    assert_nil(nil, @karaoke_bar.stock_value())
+  end
+
+  def test_get_stock_value()
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@food1)
+    assert_equal(14.00, @karaoke_bar.stock_value())
   end
 
   def test_add_customer_to_room_with_conditions__success()

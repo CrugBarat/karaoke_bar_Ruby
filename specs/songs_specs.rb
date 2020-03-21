@@ -16,7 +16,10 @@ class TestSongs < MiniTest::Test
 
       @song1 = Songs.new("Oh L'Amour", "Erasure", @lyrics1)
 
-      @lyrics2 = ["How does it feel", "To treat me like you do?", 'When you\'ve laid your hands upon me', "And told me who you are?"]
+      @lyrics2 = ["How does it feel",
+        "To treat me like you do?",
+        'When you\'ve laid your hands upon me',
+        "And told me who you are?"]
     end
 
     def test_get_title()
@@ -44,6 +47,11 @@ class TestSongs < MiniTest::Test
     def test_set_lyrics()
       @song1.lyrics = @lyrics2
       assert_equal(@lyrics2, @song1.lyrics())
+    end
+
+    def test_return_lyrics()
+      result = @song1.return_lyrics(@song1, "Oh L'Amour")
+      assert_equal(@lyrics1, result)
     end
 
 
