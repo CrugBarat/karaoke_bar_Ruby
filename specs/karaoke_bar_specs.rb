@@ -274,6 +274,26 @@ class TestKaraokeBar < MiniTest::Test
     assert_equal(14.00, @karaoke_bar.stock_value())
   end
 
+  def test_get_stock_value_by_item()
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@food1)
+    assert_equal(24.00, @karaoke_bar.stock_value_by_item(@drink1))
+  end
+
+  def test_get_stock_value_by_item()
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.add_item(@drink1)
+    @karaoke_bar.add_item(@food1)
+    assert_equal(18.00, @karaoke_bar.stock_value_by_item(@food1))
+  end
+
   def test_serve_food_to_customer__success()
     @karaoke_bar.add_item(@food1)
     @karaoke_bar.add_item(@food1)

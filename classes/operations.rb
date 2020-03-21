@@ -49,12 +49,18 @@ class Operations
   end
 
   def stock_value()
-    total = 0
-    for item in @stock.keys
-      total += (item.price * @stock[item])
-    end
-    return total
+    @stock.keys.reduce(0) {|total, item| total + item.price * @stock[item]}
   end
+
+  def stock_value_by_item(item)
+    number = stock_level(item)
+    number * item.price
+  end
+
+  # def stock_value_by_type(type)
+  #   item_array = @stock.keys.map {|item| item == item.type}
+  #   item_array.reduce(0) {|total, item| total + item.price * @stock[item]}
+  # end
 
   def serve_food_to_customer(customer, food)
     return if !customer_has_cash?(customer, food)

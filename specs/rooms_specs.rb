@@ -183,8 +183,31 @@ class TestRooms < MiniTest::Test
     def test_get_stock_value()
       @room1.add_item(@drink1)
       @room1.add_item(@food1)
-      assert_equal(14.00, @room1.stock_value())
+      @room1.add_item(@drink1)
+      @room1.add_item(@food1)
+      assert_equal(28.00, @room1.stock_value())
     end
+
+    def test_get_stock_value_by_item()
+      @room1.add_item(@drink1)
+      @room1.add_item(@food1)
+      @room1.add_item(@drink1)
+      @room1.add_item(@food1)
+      @room1.add_item(@drink1)
+      @room1.add_item(@food1)
+      assert_equal(24.00, @room1.stock_value_by_item(@drink1))
+    end
+
+    def test_get_stock_value_by_item()
+      @room1.add_item(@drink1)
+      @room1.add_item(@food1)
+      @room1.add_item(@drink1)
+      @room1.add_item(@food1)
+      @room1.add_item(@drink1)
+      @room1.add_item(@food1)
+      assert_equal(18.00, @room1.stock_value_by_item(@food1))
+    end
+
 
     def test_serve_food_to_customer__success()
       @room1.add_item(@food1)
