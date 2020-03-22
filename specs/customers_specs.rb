@@ -14,6 +14,9 @@ class TestCustomers < MiniTest::Test
   def setup()
     @customer1 = Customers.new("Frank", 35, 45.00, 5, "A Little Respect")
     @drink1 = Drinks.new("Tennents", :Lager, 4.00, 5)
+    @drink2 = Drinks.new("Tequila", :Shot, 3.00, 20)
+    @drink3 = Drinks.new("Sambuca", :Shot, 3.00, 30)
+    @drink4 = Drinks.new("Absinthe", :Shot, 3.00, 40)
     @food1 = Food.new("Burger", 6.00, 15)
     @customer2 = Customers.new("Aldo", 40, 65.00, 40, "Oh L'Amour")
     @lyrics1 = ["Oh l'amour",
@@ -92,21 +95,39 @@ class TestCustomers < MiniTest::Test
     end
 
     def test_customer_cheers_when_fav_song_is_played()
-      result = @customer2.customer_cheers_at_fav_song(@song1, @customer2)
+      result = @customer2.customer_cheers_at_fav_song(@song1)
       assert_equal("Woohoo!", result)
     end
 
     def test_customer_sings_when_fav_song_is_played()
-      result = @customer2.customer_sings_lyrics(@song1, @customer2)
+      result = @customer2.customer_sings_lyrics(@song1)
       assert_equal(@lyrics1, result)
     end
 
     def test_customer_requests_fav_song__song1()
-      assert_equal(@song1, @customer2.request_fav_song(@room1, @customer2))
+      assert_equal(@song1, @customer2.request_fav_song(@room1))
     end
 
     def test_customer_requests_fav_song__song3()
-      assert_equal(@song3, @customer1.request_fav_song(@room1, @customer1))
+      assert_equal(@song3, @customer1.request_fav_song(@room1))
+    end
+
+    def test_customer_drunkness_drunkness60()
+      @customer2.consume_drink(@drink2)
+      expected = "Listen. Naw listen. You are ma best mate. I totally mean that"
+      assert_equal(expected, @customer2.customer_drunkness_prompts())
+    end
+
+    def test_customer_drunkness_prompts__drunkness70()
+      @customer2.consume_drink(@drink3)
+      expected = "Pftft skkdi lmskmcsc okmslkllsm"
+      assert_equal(expected, @customer2.customer_drunkness_prompts())
+    end
+
+    def test_customer_drunkness_prompts__drunkness80()
+      @customer2.consume_drink(@drink4)
+      @customer2.customer_drunkness_prompts()
+      assert_equal(50, @customer2.drunkness())
     end
 
   end
