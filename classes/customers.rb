@@ -75,7 +75,7 @@ class Customers
 
   def drunkness_prompts()
     if @drunkness >= 60 && @drunkness < 70
-      "Listen. Naw listen. Yer ma best pal. I mean it man!"
+      "Listen. Naw listen. Yer ma best pal. Naw, I mean it!"
     elsif @drunkness >= 70 && @drunkness < 80
       "Pftft skkdi lmskmcsc okmslkllsm"
     elsif @drunkness >= 80

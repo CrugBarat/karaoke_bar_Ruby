@@ -177,7 +177,7 @@ class TestCustomers < MiniTest::Test
     def test_customer_drunkness_drunkness60()
       @room1.add_item_to_customer(@customer2, @drink2)
       @customer2.consume_drink(@drink2)
-      expected = "Listen. Naw listen. Yer ma best pal. I mean it man!"
+      expected = "Listen. Naw listen. Yer ma best pal. Naw, I mean it!"
       assert_equal(expected, @customer2.drunkness_prompts())
     end
 

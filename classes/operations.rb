@@ -68,8 +68,8 @@ class Operations
   end
 
   def stock_value_by_item(item)
-    number = stock_level(item)
-    number * item.price
+    level = stock_level(item)
+    level * item.price
   end
 
   def add_item_to_customer(customer, item)
