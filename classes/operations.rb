@@ -24,6 +24,14 @@ class Operations
     @customers_array.clear()
   end
 
+  def room_capacity_full?(room)
+    if room.capacity <= room.customer_count
+      return true
+    else
+      return false
+    end
+  end
+
   def customer_is_above_age?(customer)
     customer.age >= @age_limit
   end
@@ -32,7 +40,18 @@ class Operations
     customer.drunkness > @drunkness_level
   end
 
-  def add_item(item)
+  def add_customer_to_room(room, customer)
+    return if !customer.enough_cash?(room)
+    return if !customer_is_above_age?(customer)
+    return if room_capacity_full?(room)
+    return if customer_too_drunk?(customer)
+    room.add_customer(customer)
+    customer.pay(room.price)
+    room.add_money_to_till(room.price)
+    room.increase_customer_spending(room.price)
+  end
+
+  def add_item_to_stock(item)
     if @stock.include?(item)
       @stock[item] += 1
     else
@@ -81,31 +100,12 @@ class Operations
     end
   end
 
-  def room_capacity_full?(room)
-    if room.capacity <= room.customer_count
-      return true
-    else
-      return false
-    end
-  end
-
   def increase_customer_spending(amount)
     @customer_spending += amount
   end
 
   def decrease_customer_spending(amount)
     @customer_spending -= amount
-  end
-
-  def add_customer_to_room(room, customer)
-    return if !customer.enough_cash?(room)
-    return if !customer_is_above_age?(customer)
-    return if room_capacity_full?(room)
-    return if customer_too_drunk?(customer)
-    room.add_customer(customer)
-    customer.pay(room.price)
-    room.add_money_to_till(room.price)
-    room.increase_customer_spending(room.price)
   end
 
   def bar_tab_has_credit?(room, item)
