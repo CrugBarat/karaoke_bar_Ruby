@@ -382,4 +382,16 @@ class TestRooms < MiniTest::Test
       assert_equal(0, @room1.stock_level(@food1))
     end
 
+    def test_customer_refund__food()
+      @room1.customer_refund(@customer1, @food1)
+      assert_equal(51.00, @customer1.wallet())
+      assert_equal(24.00, @room1.till())
+    end
+
+    def test_customer_refund__drink()
+      @room1.customer_refund(@customer1, @drink1)
+      assert_equal(53.00, @customer1.wallet())
+      assert_equal(22.00, @room1.till())
+    end
+
   end

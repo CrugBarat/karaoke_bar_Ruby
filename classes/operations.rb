@@ -93,6 +93,10 @@ class Operations
     @customer_spending += amount
   end
 
+  def decrease_customer_spending(amount)
+    @customer_spending -= amount
+  end
+
   def add_customer_to_room(room, customer)
     return if !customer_has_cash?(customer, room)
     return if !customer_is_above_age?(customer)
@@ -153,6 +157,12 @@ class Operations
       add_money_to_till(food.price)
       increase_customer_spending(food.price)
     end
+  end
+
+  def customer_refund(customer, item)
+    customer.wallet += item.price
+    remove_money_from_till(item.price)
+    decrease_customer_spending(item.price)
   end
 
 end
