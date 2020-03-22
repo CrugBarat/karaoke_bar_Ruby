@@ -95,12 +95,12 @@ class TestCustomers < MiniTest::Test
     end
 
     def test_customer_cheers_when_fav_song_is_played()
-      result = @customer2.customer_cheers_at_fav_song(@song1)
+      result = @customer2.cheers_at_fav_song(@song1)
       assert_equal("Woohoo!", result)
     end
 
     def test_customer_sings_when_fav_song_is_played()
-      result = @customer2.customer_sings_lyrics(@song1)
+      result = @customer2.sings_lyrics(@song1)
       assert_equal(@lyrics1, result)
     end
 
@@ -115,19 +115,26 @@ class TestCustomers < MiniTest::Test
     def test_customer_drunkness_drunkness60()
       @customer2.consume_drink(@drink2)
       expected = "Listen. Naw listen. You are ma best mate. I totally mean that"
-      assert_equal(expected, @customer2.customer_drunkness_prompts())
+      assert_equal(expected, @customer2.drunkness_prompts())
     end
 
     def test_customer_drunkness_prompts__drunkness70()
       @customer2.consume_drink(@drink3)
       expected = "Pftft skkdi lmskmcsc okmslkllsm"
-      assert_equal(expected, @customer2.customer_drunkness_prompts())
+      assert_equal(expected, @customer2.drunkness_prompts())
     end
 
     def test_customer_drunkness_prompts__drunkness80()
       @customer2.consume_drink(@drink4)
-      @customer2.customer_drunkness_prompts()
+      @customer2.drunkness_prompts()
       assert_equal(50, @customer2.drunkness())
+    end
+
+    def test_customer_can_add_money_to_tab()
+      @room1.tab = 50.00
+      @customer2.add_money_to_tab(@room1, 35.00)
+      assert_equal(85.00, @room1.tab())
+      assert_equal(30.00, @customer2.wallet())
     end
 
   end

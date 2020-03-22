@@ -26,13 +26,18 @@ class Customers
     "Woohoo!"
   end
 
-  def customer_cheers_at_fav_song(song)
+  def cheers_at_fav_song(song)
     if @fav_song == song.title
       cheers()
     end
   end
 
-  def customer_sings_lyrics(song)
+  def add_money_to_tab(room, amount)
+    @wallet -= amount
+    room.tab += amount
+  end
+
+  def sings_lyrics(song)
     lyrics = song.lyrics
     if @fav_song == song.title
       lyrics.each {|lyric| p lyric.upcase}
@@ -44,7 +49,7 @@ class Customers
     room.get_song_by_title(title)
   end
 
-  def customer_drunkness_prompts()
+  def drunkness_prompts()
     if @drunkness >= 60 && @drunkness < 70
       "Listen. Naw listen. You are ma best mate. I totally mean that"
     elsif @drunkness >= 70 && @drunkness < 80
