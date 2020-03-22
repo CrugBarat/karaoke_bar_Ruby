@@ -39,4 +39,10 @@ class Customers
     end
   end
 
+  def request_fav_song(room, customer)
+    title = customer.fav_song
+    room.get_song_by_title(title)
+  end
+
+
 end

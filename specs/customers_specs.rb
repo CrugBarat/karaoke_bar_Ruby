@@ -4,6 +4,7 @@ require_relative('../classes/customers.rb')
 require_relative('../classes/drinks.rb')
 require_relative('../classes/food.rb')
 require_relative('../classes/songs.rb')
+require_relative('../classes/rooms.rb')
 
 
 Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
@@ -21,6 +22,9 @@ class TestCustomers < MiniTest::Test
       "What's a boy in love",
       "Supposed to do?"]
       @song1 = Songs.new("Oh L'Amour", "Erasure", @lyrics1)
+      @song3 = Songs.new("A Little Respect", "Erasure", @lyrics3)
+      @playlist = [@song1, @song3]
+      @room1 = Rooms.new("Elvis Room", 30.00, 8, 10.00, @playlist)
     end
 
     def test_get_name()
@@ -95,6 +99,14 @@ class TestCustomers < MiniTest::Test
     def test_customer_sings_when_fav_song_is_played()
       result = @customer2.customer_sings_lyrics(@song1, @customer2)
       assert_equal(@lyrics1, result)
+    end
+
+    def test_customer_requests_fav_song__song1()
+      assert_equal(@song1, @customer2.request_fav_song(@room1, @customer2))
+    end
+
+    def test_customer_requests_fav_song__song3()
+      assert_equal(@song3, @customer1.request_fav_song(@room1, @customer1))
     end
 
   end
