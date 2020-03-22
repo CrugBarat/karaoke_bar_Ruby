@@ -372,4 +372,14 @@ class TestRooms < MiniTest::Test
       assert_equal(1, @room1.stock_level(@drink1))
     end
 
+    def test_food_buy_1_get_1_free()
+      @room1.add_item(@food1)
+      @room1.add_item(@food1)
+      @room1.food_buy_1_get_1_free(@customer1, @food1)
+      assert_equal(39.00, @customer1.wallet())
+      assert_equal(-25, @customer1.drunkness())
+      assert_equal(36.00, @room1.till())
+      assert_equal(0, @room1.stock_level(@food1))
+    end
+
   end

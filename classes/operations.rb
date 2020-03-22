@@ -143,4 +143,16 @@ class Operations
     end
   end
 
+  def food_buy_1_get_1_free(customer, food)
+    return if !customer_has_cash?(customer, food)
+    if @stock[food] > 0
+      customer.pay(food.price)
+      customer.consume_food(food)
+      customer.consume_food(food)
+      @stock[food] -= 2
+      add_money_to_till(food.price)
+      increase_customer_spending(food.price)
+    end
+  end
+
 end

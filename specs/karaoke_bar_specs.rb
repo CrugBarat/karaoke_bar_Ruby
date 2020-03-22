@@ -463,4 +463,14 @@ class TestKaraokeBar < MiniTest::Test
     assert_equal(1, @karaoke_bar.stock_level(@drink1))
   end
 
+  def test_food_buy_1_get_1_free()
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.add_item(@food1)
+    @karaoke_bar.food_buy_1_get_1_free(@customer1, @food1)
+    assert_equal(32.00, @customer1.wallet())
+    assert_equal(-10, @customer1.drunkness())
+    assert_equal(56.00, @karaoke_bar.till())
+    assert_equal(0, @karaoke_bar.stock_level(@food1))
+  end
+
 end
