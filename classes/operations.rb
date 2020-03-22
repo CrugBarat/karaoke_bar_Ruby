@@ -126,4 +126,21 @@ class Operations
     end
   end
 
+  def drink_promotion_50off(drink)
+    drink.price * 0.5
+  end
+
+  def drink_happy_hour(customer, drink)
+    return if !customer_has_cash?(customer, drink)
+    return if !customer_is_above_age?(customer)
+    return if customer_too_drunk?(customer)
+    if @stock[drink] > 0
+      customer.pay(drink_promotion_50off(drink))
+      customer.consume_drink(drink)
+      @stock[drink] -= 1
+      add_money_to_till(drink_promotion_50off(drink))
+      increase_customer_spending(drink_promotion_50off(drink))
+    end
+  end
+
 end

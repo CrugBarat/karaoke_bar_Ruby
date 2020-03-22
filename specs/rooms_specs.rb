@@ -358,4 +358,18 @@ class TestRooms < MiniTest::Test
       assert_equal(5.00, @room1.tab())
     end
 
+    def test_drink_promotion_50off()
+      assert_equal(4.00, @room1.drink_promotion_50off(@drink1))
+    end
+
+    def test_drink_happy_hour()
+      @room1.add_item(@drink1)
+      @room1.add_item(@drink1)
+      @room1.drink_happy_hour(@customer1, @drink1)
+      assert_equal(41.00, @customer1.wallet())
+      assert_equal(10, @customer1.drunkness())
+      assert_equal(34.00, @room1.till())
+      assert_equal(1, @room1.stock_level(@drink1))
+    end
+
   end
