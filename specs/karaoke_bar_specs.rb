@@ -123,30 +123,6 @@ class TestKaraokeBar < MiniTest::Test
     assert_equal(3, @karaoke_bar.room_count())
   end
 
-  def test_customer_can_afford_drink__true()
-    assert_equal(true, @karaoke_bar.customer_has_cash?(@customer1, @drink1))
-  end
-
-  def test_customer_can_afford_drink__false()
-    assert_equal(false, @karaoke_bar.customer_has_cash?(@customer2, @drink1))
-  end
-
-  def test_customer_can_afford_food__true()
-    assert_equal(true, @karaoke_bar.customer_has_cash?(@customer1, @food1))
-  end
-
-  def test_customer_can_afford_food__false()
-    assert_equal(false, @karaoke_bar.customer_has_cash?(@customer2, @food1))
-  end
-
-  def test_customer_can_afford_room_fee__true()
-    assert_equal(true, @karaoke_bar.customer_has_cash?(@customer1, @room1))
-  end
-
-  def test_customer_can_afford_room_fee__true()
-    assert_equal(false, @karaoke_bar.customer_has_cash?(@customer2, @room1))
-  end
-
   def test_room_capacity_full__false()
     @room2.add_customer(@customer1)
     @room2.add_customer(@customer2)
@@ -299,7 +275,6 @@ class TestKaraokeBar < MiniTest::Test
     @karaoke_bar.add_item(@food1)
     @karaoke_bar.serve_food_to_customer(@customer1, @food1)
     assert_equal(32.00, @customer1.wallet())
-    assert_equal(5, @customer1.drunkness())
     assert_equal(56.00, @karaoke_bar.till())
     assert_equal(1, @karaoke_bar.stock_level(@food1))
   end
@@ -309,7 +284,6 @@ class TestKaraokeBar < MiniTest::Test
     @karaoke_bar.add_item(@food1)
     @karaoke_bar.serve_food_to_customer(@customer2, @food1)
     assert_equal(5.00, @customer2.wallet())
-    assert_equal(35, @customer2.drunkness())
     assert_equal(50.00, @karaoke_bar.till())
     assert_equal(2, @karaoke_bar.stock_level(@food1))
   end
@@ -319,7 +293,6 @@ class TestKaraokeBar < MiniTest::Test
     @karaoke_bar.serve_food_to_customer(@customer5, @food1)
     @karaoke_bar.serve_food_to_customer(@customer1, @food1)
     assert_equal(38.00, @customer1.wallet())
-    assert_equal(20, @customer1.drunkness())
     assert_equal(56.00, @karaoke_bar.till())
     assert_equal(0, @karaoke_bar.stock_level(@food1))
   end
@@ -329,7 +302,6 @@ class TestKaraokeBar < MiniTest::Test
     @karaoke_bar.add_item(@drink1)
     @karaoke_bar.serve_drink_to_customer(@customer1, @drink1)
     assert_equal(30.00, @customer1.wallet())
-    assert_equal(25, @customer1.drunkness())
     assert_equal(58.00, @karaoke_bar.till())
     assert_equal(1, @karaoke_bar.stock_level(@drink1))
   end
@@ -339,7 +311,6 @@ class TestKaraokeBar < MiniTest::Test
     @karaoke_bar.add_item(@drink1)
     @karaoke_bar.serve_drink_to_customer(@customer3, @drink1)
     assert_equal(15.00, @customer3.wallet())
-    assert_equal(0, @customer3.drunkness())
     assert_equal(50.00, @karaoke_bar.till())
     assert_equal(2, @karaoke_bar.stock_level(@drink1))
   end
@@ -349,7 +320,6 @@ class TestKaraokeBar < MiniTest::Test
     @karaoke_bar.add_item(@drink1)
     @karaoke_bar.serve_drink_to_customer(@customer2, @drink1)
     assert_equal(5.00, @customer2.wallet())
-    assert_equal(35, @customer2.drunkness())
     assert_equal(50.00, @karaoke_bar.till())
     assert_equal(2, @karaoke_bar.stock_level(@drink1))
   end
@@ -359,7 +329,6 @@ class TestKaraokeBar < MiniTest::Test
     @karaoke_bar.serve_drink_to_customer(@customer5, @drink1)
     @karaoke_bar.serve_drink_to_customer(@customer1, @drink1)
     assert_equal(38.00, @customer1.wallet())
-    assert_equal(20, @customer1.drunkness())
     assert_equal(58.00, @karaoke_bar.till())
     assert_equal(0, @karaoke_bar.stock_level(@drink1))
   end
@@ -368,7 +337,6 @@ class TestKaraokeBar < MiniTest::Test
     @karaoke_bar.add_item(@drink1)
     @karaoke_bar.serve_drink_to_customer(@customer4, @drink1)
     assert_equal(115.00, @customer4.wallet())
-    assert_equal(55, @customer4.drunkness())
     assert_equal(50.00, @karaoke_bar.till())
     assert_equal(1, @karaoke_bar.stock_level(@drink1))
   end
@@ -458,7 +426,6 @@ class TestKaraokeBar < MiniTest::Test
     @karaoke_bar.add_item(@drink1)
     @karaoke_bar.drink_happy_hour(@customer1, @drink1)
     assert_equal(34.00, @customer1.wallet())
-    assert_equal(25, @customer1.drunkness())
     assert_equal(54.00, @karaoke_bar.till())
     assert_equal(1, @karaoke_bar.stock_level(@drink1))
   end
@@ -468,7 +435,6 @@ class TestKaraokeBar < MiniTest::Test
     @karaoke_bar.add_item(@food1)
     @karaoke_bar.food_buy_1_get_1_free(@customer1, @food1)
     assert_equal(32.00, @customer1.wallet())
-    assert_equal(-10, @customer1.drunkness())
     assert_equal(56.00, @karaoke_bar.till())
     assert_equal(0, @karaoke_bar.stock_level(@food1))
   end
@@ -483,6 +449,11 @@ class TestKaraokeBar < MiniTest::Test
     @karaoke_bar.customer_refund(@customer1, @drink1)
     assert_equal(46.00, @customer1.wallet())
     assert_equal(42.00, @karaoke_bar.till())
+  end
+
+  def test_add_item_to_customer()
+    @karaoke_bar.add_item_to_customer(@customer1, @drink1)
+    assert_equal([@drink1], @customer1.tray())
   end
 
 end

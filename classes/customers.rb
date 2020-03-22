@@ -1,6 +1,6 @@
 class Customers
 
-  attr_accessor :name, :age, :wallet, :drunkness, :fav_song
+  attr_accessor :name, :age, :wallet, :drunkness, :fav_song, :tray
 
   def initialize(name, age, wallet, drunkness, fav_song)
     @name = name
@@ -8,18 +8,42 @@ class Customers
     @wallet = wallet
     @drunkness = drunkness
     @fav_song = fav_song
+    @tray = []
   end
 
   def pay(amount)
     @wallet -= amount
   end
 
+  def has_item?(item_name)
+    for item in @tray
+      if item == item_name
+        return true
+      end
+    end
+    return false
+  end
+
   def consume_drink(drink)
+    return if !has_item?(drink)
+    @tray.delete(drink)
     @drunkness += drink.alcohol_content
   end
 
   def consume_food(food)
+    return if !has_item?(food)
+    @tray.delete(food)
     @drunkness -= food.rejuv_level
+  end
+
+  def give_item(customer, item)
+    return if !has_item?(item)
+    @tray.delete(item)
+    customer.tray.push(item)
+  end
+
+  def enough_cash?(item)
+    @wallet >= item.price
   end
 
   def cheers()
@@ -51,7 +75,7 @@ class Customers
 
   def drunkness_prompts()
     if @drunkness >= 60 && @drunkness < 70
-      "Listen. Naw listen. You are ma best mate. I totally mean that"
+      "Listen. Naw listen. Yer ma best pal. I mean it man!"
     elsif @drunkness >= 70 && @drunkness < 80
       "Pftft skkdi lmskmcsc okmslkllsm"
     elsif @drunkness >= 80
@@ -59,7 +83,6 @@ class Customers
     elsif @drunkness < 60
       "Shots?"
     end
-
   end
 
   def customer_spews()

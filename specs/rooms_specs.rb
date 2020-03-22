@@ -110,22 +110,6 @@ class TestRooms < MiniTest::Test
       assert_equal(@lyrics2, result)
     end
 
-    def test_customer_can_afford_drink__true()
-      assert_equal(true, @room1.customer_has_cash?(@customer1, @drink1))
-    end
-
-    def test_customer_can_afford_drink__false()
-      assert_equal(false, @room1.customer_has_cash?(@customer2, @drink1))
-    end
-
-    def test_customer_can_afford_food__true()
-      assert_equal(true, @room1.customer_has_cash?(@customer1, @food1))
-    end
-
-    def test_customer_can_afford_food__false()
-      assert_equal(false, @room1.customer_has_cash?(@customer2, @food1))
-    end
-
     def test_customer_is_above_age__can_enter()
       assert_equal(true, @room1.customer_is_above_age?(@customer2))
     end
@@ -213,7 +197,6 @@ class TestRooms < MiniTest::Test
       @room1.add_item(@food1)
       @room1.serve_food_to_customer(@customer1, @food1)
       assert_equal(39.00, @customer1.wallet())
-      assert_equal(-10, @customer1.drunkness())
       assert_equal(36.00, @room1.till())
       assert_equal(1, @room1.stock_level(@food1))
     end
@@ -223,7 +206,6 @@ class TestRooms < MiniTest::Test
       @room1.add_item(@food1)
       @room1.serve_food_to_customer(@customer2, @food1)
       assert_equal(5.00, @customer2.wallet())
-      assert_equal(35, @customer2.drunkness())
       assert_equal(30.00, @room1.till())
       assert_equal(2, @room1.stock_level(@food1))
     end
@@ -233,7 +215,6 @@ class TestRooms < MiniTest::Test
       @room1.serve_food_to_customer(@customer5, @food1)
       @room1.serve_food_to_customer(@customer1, @food1)
       assert_equal(45.00, @customer1.wallet())
-      assert_equal(5, @customer1.drunkness())
       assert_equal(36.00, @room1.till())
       assert_equal(0, @room1.stock_level(@food1))
     end
@@ -243,7 +224,6 @@ class TestRooms < MiniTest::Test
       @room1.add_item(@drink1)
       @room1.serve_drink_to_customer(@customer1, @drink1)
       assert_equal(37.00, @customer1.wallet())
-      assert_equal(10, @customer1.drunkness())
       assert_equal(38.00, @room1.till())
       assert_equal(1, @room1.stock_level(@drink1))
     end
@@ -253,7 +233,6 @@ class TestRooms < MiniTest::Test
       @room1.add_item(@drink1)
       @room1.serve_drink_to_customer(@customer3, @drink1)
       assert_equal(15.00, @customer3.wallet())
-      assert_equal(0, @customer3.drunkness())
       assert_equal(30.00, @room1.till())
       assert_equal(2, @room1.stock_level(@drink1))
     end
@@ -263,7 +242,6 @@ class TestRooms < MiniTest::Test
       @room1.add_item(@drink1)
       @room1.serve_drink_to_customer(@customer2, @drink1)
       assert_equal(5.00, @customer2.wallet())
-      assert_equal(35, @customer2.drunkness())
       assert_equal(30.00, @room1.till())
       assert_equal(2, @room1.stock_level(@drink1))
     end
@@ -273,7 +251,6 @@ class TestRooms < MiniTest::Test
       @room1.serve_drink_to_customer(@customer5, @drink1)
       @room1.serve_drink_to_customer(@customer1, @drink1)
       assert_equal(45.00, @customer1.wallet())
-      assert_equal(5, @customer1.drunkness())
       assert_equal(38.00, @room1.till())
       assert_equal(0, @room1.stock_level(@drink1))
     end
@@ -282,7 +259,6 @@ class TestRooms < MiniTest::Test
       @room1.add_item(@drink1)
       @room1.serve_drink_to_customer(@customer4, @drink1)
       assert_equal(115.00, @customer4.wallet())
-      assert_equal(55, @customer4.drunkness())
       assert_equal(30.00, @room1.till())
       assert_equal(1, @room1.stock_level(@drink1))
     end
@@ -367,7 +343,6 @@ class TestRooms < MiniTest::Test
       @room1.add_item(@drink1)
       @room1.drink_happy_hour(@customer1, @drink1)
       assert_equal(41.00, @customer1.wallet())
-      assert_equal(10, @customer1.drunkness())
       assert_equal(34.00, @room1.till())
       assert_equal(1, @room1.stock_level(@drink1))
     end
@@ -377,7 +352,6 @@ class TestRooms < MiniTest::Test
       @room1.add_item(@food1)
       @room1.food_buy_1_get_1_free(@customer1, @food1)
       assert_equal(39.00, @customer1.wallet())
-      assert_equal(-25, @customer1.drunkness())
       assert_equal(36.00, @room1.till())
       assert_equal(0, @room1.stock_level(@food1))
     end

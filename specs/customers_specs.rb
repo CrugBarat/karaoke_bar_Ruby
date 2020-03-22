@@ -19,6 +19,7 @@ class TestCustomers < MiniTest::Test
     @drink4 = Drinks.new("Absinthe", :Shot, 3.00, 40)
     @food1 = Food.new("Burger", 6.00, 15)
     @customer2 = Customers.new("Aldo", 40, 65.00, 40, "Oh L'Amour")
+    @customer3 = Customers.new("Ally", 17, 3.00, 0, "Dancing Queen")
     @lyrics1 = ["Oh l'amour",
       "Oh l'amour",
       "Mon amour",
@@ -75,19 +76,80 @@ class TestCustomers < MiniTest::Test
       assert_equal("Blue Savannah", @customer1.fav_song())
     end
 
+    def test_get_tray()
+      assert_equal([], @customer1.tray())
+    end
+
+    def test_set_tray()
+      @customer1.tray = [@drink1]
+      assert_equal([@drink1], @customer1.tray())
+    end
+
     def test_customer_can_pay()
       @customer1.pay(6.00)
       assert_equal(39.00, @customer1.wallet())
     end
 
+    def test_customer_has_item__true()
+      @room1.add_item_to_customer(@customer1, @drink1)
+      @room1.add_item_to_customer(@customer1, @food1)
+      assert_equal(true, @customer1.has_item?(@drink1))
+    end
+
+    def test_customer_has_item__false()
+      assert_equal(false, @customer1.has_item?(@drink1))
+    end
+
     def test_customer_can_consume_drink()
+      @room1.add_item_to_customer(@customer1, @drink1)
+      @room1.add_item_to_customer(@customer1, @drink2)
       @customer1.consume_drink(@drink1)
       assert_equal(10, @customer1.drunkness())
+      assert_equal([@drink2], @customer1.tray())
     end
 
     def test_customer_can_consume_food()
+      @room1.add_item_to_customer(@customer1, @food1)
       @customer1.consume_food(@food1)
       assert_equal(-10, @customer1.drunkness())
+      assert_equal([], @customer1.tray())
+    end
+
+    def test_customer_cant_consume__no_item()
+      @customer1.consume_food(@food1)
+      assert_equal(5, @customer1.drunkness())
+    end
+
+    def test_customer_can_give_item_to_another_customer()
+      @room1.add_item_to_customer(@customer1, @drink1)
+      @room1.add_item_to_customer(@customer1, @drink2)
+      @customer1.give_item(@customer2, @drink2)
+      assert_equal([@drink2], @customer2.tray())
+      assert_equal([@drink1], @customer1.tray())
+    end
+
+    def test_customer_can_afford_drink__true()
+      assert_equal(true, @customer1.enough_cash?(@drink1))
+    end
+
+    def test_customer_can_afford_drink__false()
+      assert_equal(false, @customer3.enough_cash?(@drink1))
+    end
+
+    def test_customer_can_afford_food__true()
+      assert_equal(true, @customer1.enough_cash?(@food1))
+    end
+
+    def test_customer_can_afford_food__false()
+      assert_equal(false, @customer3.enough_cash?(@food1))
+    end
+
+    def test_customer_can_afford_room_fee__true()
+      assert_equal(true, @customer1.enough_cash?(@room1))
+    end
+
+    def test_customer_can_afford_room_fee__false()
+      assert_equal(false, @customer3.enough_cash?(@room1))
     end
 
     def test_customer_can_cheers()
@@ -113,18 +175,21 @@ class TestCustomers < MiniTest::Test
     end
 
     def test_customer_drunkness_drunkness60()
+      @room1.add_item_to_customer(@customer2, @drink2)
       @customer2.consume_drink(@drink2)
-      expected = "Listen. Naw listen. You are ma best mate. I totally mean that"
+      expected = "Listen. Naw listen. Yer ma best pal. I mean it man!"
       assert_equal(expected, @customer2.drunkness_prompts())
     end
 
     def test_customer_drunkness_prompts__drunkness70()
+      @room1.add_item_to_customer(@customer2, @drink3)
       @customer2.consume_drink(@drink3)
       expected = "Pftft skkdi lmskmcsc okmslkllsm"
       assert_equal(expected, @customer2.drunkness_prompts())
     end
 
     def test_customer_drunkness_prompts__drunkness80()
+      @room1.add_item_to_customer(@customer2, @drink4)
       @customer2.consume_drink(@drink4)
       @customer2.drunkness_prompts()
       assert_equal(50, @customer2.drunkness())

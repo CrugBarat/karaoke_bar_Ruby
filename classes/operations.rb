@@ -24,10 +24,6 @@ class Operations
     @customers_array.clear()
   end
 
-  def customer_has_cash?(customer, item)
-    customer.wallet >= item.price
-  end
-
   def customer_is_above_age?(customer)
     customer.age >= @age_limit
   end
@@ -57,11 +53,15 @@ class Operations
     number * item.price
   end
 
+  def add_item_to_customer(customer, item)
+    customer.tray.push(item)
+  end
+
   def serve_food_to_customer(customer, food)
-    return if !customer_has_cash?(customer, food)
+    return if !customer.enough_cash?(food)
     if @stock[food] > 0
       customer.pay(food.price)
-      customer.consume_food(food)
+      add_item_to_customer(customer, food)
       @stock[food] -= 1
       add_money_to_till(food.price)
       increase_customer_spending(food.price)
@@ -69,12 +69,12 @@ class Operations
   end
 
   def serve_drink_to_customer(customer, drink)
-    return if !customer_has_cash?(customer, drink)
+    return if !customer.enough_cash?(drink)
     return if !customer_is_above_age?(customer)
     return if customer_too_drunk?(customer)
     if @stock[drink] > 0
       customer.pay(drink.price)
-      customer.consume_drink(drink)
+      add_item_to_customer(customer, drink)
       @stock[drink] -= 1
       add_money_to_till(drink.price)
       increase_customer_spending(drink.price)
@@ -98,7 +98,7 @@ class Operations
   end
 
   def add_customer_to_room(room, customer)
-    return if !customer_has_cash?(customer, room)
+    return if !customer.enough_cash?(room)
     return if !customer_is_above_age?(customer)
     return if room_capacity_full?(room)
     return if customer_too_drunk?(customer)
@@ -115,7 +115,7 @@ class Operations
   def if_using_bar_tab_food(room, customer, food)
     return if !bar_tab_has_credit?(room, food)
     if @stock[food] > 0
-      customer.consume_food(food)
+      add_item_to_customer(customer, food)
       @stock[food] -= 1
       room.tab -= food.price
     end
@@ -124,7 +124,7 @@ class Operations
   def if_using_bar_tab_drink(room, customer, drink)
     return if !bar_tab_has_credit?(room, drink)
     if @stock[drink] > 0
-      customer.consume_drink(drink)
+      add_item_to_customer(customer, drink)
       @stock[drink] -= 1
       room.tab -= drink.price
     end
@@ -135,12 +135,12 @@ class Operations
   end
 
   def drink_happy_hour(customer, drink)
-    return if !customer_has_cash?(customer, drink)
+    return if !customer.enough_cash?(drink)
     return if !customer_is_above_age?(customer)
     return if customer_too_drunk?(customer)
     if @stock[drink] > 0
       customer.pay(drink_promotion_50off(drink))
-      customer.consume_drink(drink)
+      add_item_to_customer(customer, drink)
       @stock[drink] -= 1
       add_money_to_till(drink_promotion_50off(drink))
       increase_customer_spending(drink_promotion_50off(drink))
@@ -148,11 +148,11 @@ class Operations
   end
 
   def food_buy_1_get_1_free(customer, food)
-    return if !customer_has_cash?(customer, food)
+    return if !customer.enough_cash?(food)
     if @stock[food] > 0
       customer.pay(food.price)
-      customer.consume_food(food)
-      customer.consume_food(food)
+      add_item_to_customer(customer, food)
+      add_item_to_customer(customer, food)
       @stock[food] -= 2
       add_money_to_till(food.price)
       increase_customer_spending(food.price)
