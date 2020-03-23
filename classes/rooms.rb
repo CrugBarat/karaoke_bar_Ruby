@@ -1,6 +1,6 @@
-require_relative('operations.rb')
+require_relative('bar.rb')
 
-class Rooms < Operations
+class Rooms < Bar
 
   attr_reader :name, :till, :stock, :capacity, :price, :playlist, :customer_spending, :tab
   attr_writer :till, :capacity, :price, :customer_spending, :tab

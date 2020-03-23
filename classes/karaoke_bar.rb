@@ -1,6 +1,6 @@
-require_relative('operations.rb')
+require_relative('bar.rb')
 
-class KaraokeBar < Operations
+class KaraokeBar < Bar
 
   attr_reader :name, :till, :stock, :rooms, :price, :customer_spending, :capacity, :tab
   attr_writer :till, :price, :customer_spending, :tab

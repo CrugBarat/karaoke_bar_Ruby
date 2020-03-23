@@ -1,7 +1,6 @@
 require("minitest/autorun")
 require('minitest/reporters')
 require_relative('../classes/karaoke_bar.rb')
-require_relative('../classes/operations.rb')
 require_relative('../classes/customers.rb')
 require_relative('../classes/rooms.rb')
 require_relative('../classes/drinks.rb')
